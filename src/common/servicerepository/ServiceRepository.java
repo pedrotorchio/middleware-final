@@ -11,7 +11,7 @@ public class ServiceRepository extends Hashtable<String, RemoteService> {
         System.out.println(toString() + "\n");
         return get(uid);
     }
-    public void register(String uid, RemoteService service){
+    public void bind(String uid, RemoteService service){
         put(uid, service);
     }
 
