@@ -15,7 +15,7 @@ public class Invoker {
     ServiceRepository repository = new ServiceRepository();
 
     public Invoker registerService(RemoteService service){
-        repository.register(service.getUid(), service);
+        repository.bind(service.getUid(), service);
         return this;
     }
     public void listen(int port) throws IOException {

@@ -9,7 +9,7 @@ public class Invocation {
     protected int port;
     protected InetAddress ip;
     protected String methodName;
-    protected ArrayList<String> parameters;
+    protected String[] parameters;
     protected String result;
 
     public Invocation setResult(String result) {
@@ -33,7 +33,7 @@ public class Invocation {
         this.methodName = methodName;
         return this;
     }
-    public Invocation setParameters(ArrayList<String> parameters){
+    public Invocation setParameters(String[] parameters){
         this.parameters = parameters;
         return this;
     }
@@ -42,7 +42,7 @@ public class Invocation {
         return methodName;
     }
 
-    public ArrayList<String> getParameters() {
+    public String[] getParameters() {
         return parameters;
     }
 
@@ -70,7 +70,7 @@ public class Invocation {
 
 
         about += "Method: " + methodName + " @ " + getUid() + "\n";
-        about += getParameters().size() + " Parameters: " + Arrays.toString(getParameters().toArray());
+        about += getParameters().length + " Parameters: " + Arrays.toString(getParameters());
 
         return about;
     }

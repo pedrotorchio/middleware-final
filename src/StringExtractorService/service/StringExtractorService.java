@@ -38,17 +38,17 @@ public class StringExtractorService extends RemoteService implements IStringExtr
     }
 
 
-    @Override
-    public String call(String name, ArrayList<String> parameters){
+
+    public String call(String name, String... parameters){
         String result = "";
         String arg1;
         switch(name){
             case "getVowels":
-                arg1 = parameters.get(0);
+                arg1 = parameters[0];
                 result = getVowels(arg1);
                 break;
             case "getConsonantes":
-                arg1 = parameters.get(0);
+                arg1 = parameters[0];
                 result = getConsonants(arg1);
                 break;
         }

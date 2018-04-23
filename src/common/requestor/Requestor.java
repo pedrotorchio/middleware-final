@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,7 +49,7 @@ public class Requestor<T> {
         req.addHeader("host", invoc.getIp().getHostAddress());
         req.addHeader("port", ""+invoc.getPort());
         req.setBody(mkBody(
-                invoc.getParameters().toString(),
+                Arrays.toString(invoc.getParameters()),
                 invoc.getMethodName(),
                 invoc.getUid())
         );
@@ -73,7 +74,7 @@ public class Requestor<T> {
         Invocation invocation = new Invocation()
                              .setMethodName(methodName)
                              .setObjectId(uid)
-                             .setParameters(parameters);
+                             .setParameters(parameters.toArray(new String[1]));
 
         System.out.println(invocation.toString());
 

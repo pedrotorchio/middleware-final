@@ -12,24 +12,13 @@ public class StringExtractorClientProxy extends ClientProxy implements IStringEx
     @Override
     public String getVowels(String original){
 
-        ArrayList<String> parameters = new ArrayList(1);
-                          parameters.add(original);
-        Invocation invoc = prepareInvocation("getVowels", parameters);
-
-        return new Requestor()
-                        .invoke(invoc)
-                            .getResult();
+        return call("getVowels", original);
     }
 
     @Override
     public String getConsonants(String original){
-        ArrayList<String> parameters = new ArrayList(1);
-        parameters.add(original);
-        Invocation invoc = prepareInvocation("getConsonants", parameters);
 
-        return new Requestor()
-                        .invoke(invoc)
-                            .getResult();
+        return call("getConsonants", original);
     }
 
 
