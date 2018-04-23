@@ -1,8 +1,7 @@
 package names;
 
-import client.clientproxy.ClientProxy;
-import client.clientproxy.ISubString;
-import client.clientproxy.SubStringClientProxy;
+import client.clientproxy.StringExtractorClientProxy;
+import common.clientproxy.ClientProxy;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -17,10 +16,10 @@ public class NamingProxy {
             e.printStackTrace();
         }
 
-        ClientProxy dummy = new SubStringClientProxy();
+        ClientProxy dummy = new StringExtractorClientProxy();
                     dummy.setHost(ip);
-                    dummy.setPort(8080);
-                    dummy.setUid("1");
+                    dummy.setPort(8609);
+                    dummy.setUid("str-extractor");
 
 
         return dummy;

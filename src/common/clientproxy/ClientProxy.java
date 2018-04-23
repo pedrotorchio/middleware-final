@@ -1,6 +1,7 @@
-package client.clientproxy;
+package common.clientproxy;
 
-import client.requestor.Invocation;
+import common.requestor.Invocation;
+import common.remoteservice.IRemoteService;
 
 import java.io.Serializable;
 import java.net.InetAddress;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
  * CLIENT PROXY RECEBE CHAMADAS A METODOS REMOTOS COM ASSINATURA ESPECÍFICA
  */
 
-public abstract class ClientProxy implements Serializable {
+public abstract class ClientProxy implements Serializable, IRemoteService {
     protected InetAddress host;
     protected int port;
     protected String uid;
@@ -35,7 +36,7 @@ public abstract class ClientProxy implements Serializable {
         this.uid = uid;
     }
 
-    public Invocation prepareInvocation(String methodName, ArrayList<Object> parameters){
+    public Invocation prepareInvocation(String methodName, ArrayList<String> parameters){
         Invocation invoc = new Invocation();
         invoc.setMethodName(methodName);
         invoc.setParameters(parameters);

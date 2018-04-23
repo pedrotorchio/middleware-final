@@ -1,6 +1,6 @@
 package names;
 
-import client.clientproxy.ClientProxy;
+import common.clientproxy.ClientProxy;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;

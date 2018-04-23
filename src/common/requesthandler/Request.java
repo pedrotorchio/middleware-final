@@ -1,4 +1,4 @@
-package client.requesthandler;
+package common.requesthandler;
 
 import java.util.Hashtable;
 
@@ -6,14 +6,17 @@ public class Request {
     protected Hashtable<String, String> header = new Hashtable();
     protected String body;
 
-    public void addHeader(String key, String value){
+    public Request addHeader(String key, String value){
         header.put(key, value);
+        return this;
     }
-    public void setBody(String content){
+    public Request setBody(String content){
         body = content;
+        return this;
     }
-    public void setBody(Object anycontent){
+    public Request setBody(Object anycontent){
         body = anycontent.toString();
+        return this;
     }
 
     public Hashtable<String, String> getHeader() {

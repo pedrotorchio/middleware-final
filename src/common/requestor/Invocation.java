@@ -1,4 +1,4 @@
-package client.requestor;
+package common.requestor;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ public class Invocation {
     protected int port;
     protected InetAddress ip;
     protected String methodName;
-    protected ArrayList<Object> parameters;
+    protected ArrayList<String> parameters;
     protected String result;
 
     public Invocation setResult(String result) {
@@ -33,7 +33,7 @@ public class Invocation {
         this.methodName = methodName;
         return this;
     }
-    public Invocation setParameters(ArrayList<Object> parameters){
+    public Invocation setParameters(ArrayList<String> parameters){
         this.parameters = parameters;
         return this;
     }
@@ -42,7 +42,7 @@ public class Invocation {
         return methodName;
     }
 
-    public ArrayList<Object> getParameters() {
+    public ArrayList<String> getParameters() {
         return parameters;
     }
 
@@ -63,9 +63,15 @@ public class Invocation {
     }
 
     public String toString(){
-        return ("Invocation: ") + "\n" +
-               ("Host: " + getIp().getHostAddress() + ":" + getPort()) + "\n" +
-               ("Method: " + methodName + " @ " + getUid()) + "\n" +
-               (getParameters().size() + " Parameters: " + Arrays.toString(getParameters().toArray()));
+        String about = "Invocation: \n";
+
+        if(getIp() != null)
+            about += "Host: " + getIp().getHostAddress() + ":" + getPort() + "\n";
+
+
+        about += "Method: " + methodName + " @ " + getUid() + "\n";
+        about += getParameters().size() + " Parameters: " + Arrays.toString(getParameters().toArray());
+
+        return about;
     }
 }

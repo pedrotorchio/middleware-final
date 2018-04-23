@@ -1,16 +1,18 @@
-package StringExtractorService.clientproxy;
+package client.clientproxy;
 
-import StringExtractorService.requestor.Invocation;
-import StringExtractorService.requestor.Requestor;
+import StringExtractorService.service.IStringExtractor;
+import common.requestor.Invocation;
+import common.requestor.Requestor;
+import common.clientproxy.ClientProxy;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class SubStringClientProxy extends ClientProxy implements ISubString {
+public class StringExtractorClientProxy extends ClientProxy implements IStringExtractor {
     @Override
-    public String getVowels(String original) throws IOException {
+    public String getVowels(String original){
 
-        ArrayList<Object> parameters = new ArrayList(1);
+        ArrayList<String> parameters = new ArrayList(1);
                           parameters.add(original);
         Invocation invoc = prepareInvocation("getVowels", parameters);
 
@@ -20,8 +22,8 @@ public class SubStringClientProxy extends ClientProxy implements ISubString {
     }
 
     @Override
-    public String getConsonants(String original) throws IOException {
-        ArrayList<Object> parameters = new ArrayList(1);
+    public String getConsonants(String original){
+        ArrayList<String> parameters = new ArrayList(1);
         parameters.add(original);
         Invocation invoc = prepareInvocation("getConsonants", parameters);
 

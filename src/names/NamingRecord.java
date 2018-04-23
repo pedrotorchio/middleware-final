@@ -1,6 +1,6 @@
 package names;
 
-import client.clientproxy.ClientProxy;
+import common.clientproxy.ClientProxy;
 
 public class NamingRecord {
     protected String name;

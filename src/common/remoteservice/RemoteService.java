@@ -1,19 +1,26 @@
-package StringExtractorService.clientproxy;
+package common.remoteservice;
 
-import StringExtractorService.requestor.Invocation;
+import common.requestor.Invocation;
 
 import java.io.Serializable;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 /**
  * CLIENT PROXY RECEBE CHAMADAS A METODOS REMOTOS COM ASSINATURA ESPECÍFICA
  */
 
-public abstract class ClientProxy implements Serializable {
+public abstract class RemoteService implements Serializable, IRemoteService {
     protected InetAddress host;
     protected int port;
     protected String uid;
+
+    public RemoteService(String id) throws UnknownHostException {
+        host = InetAddress.getLocalHost();
+        uid  = id;
+        port = 8742;
+    }
 
     public InetAddress getHost(){
         return host;
@@ -35,7 +42,7 @@ public abstract class ClientProxy implements Serializable {
         this.uid = uid;
     }
 
-    public Invocation prepareInvocation(String methodName, ArrayList<Object> parameters){
+    public Invocation prepareInvocation(String methodName, ArrayList<String> parameters){
         Invocation invoc = new Invocation();
         invoc.setMethodName(methodName);
         invoc.setParameters(parameters);
@@ -45,4 +52,6 @@ public abstract class ClientProxy implements Serializable {
 
         return invoc;
     }
+    public abstract String call(String name, ArrayList<String> parameters);
+
 }
