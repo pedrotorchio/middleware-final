@@ -1,4 +1,4 @@
-package StringExtractorService.service;
+package stringmanipulationservices.service;
 
 public interface IUpperLower {
     String toUppercase(String original);

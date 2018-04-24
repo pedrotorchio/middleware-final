@@ -1,12 +1,7 @@
-package StringExtractorService.service;
+package stringmanipulationservices.service;
 
 import common.remoteservice.RemoteService;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.Predicate;
 
 public class StringExtractorService extends RemoteService implements IStringExtractor {

@@ -1,6 +1,6 @@
 package client.clientproxy;
 
-import StringExtractorService.service.IUpperLower;
+import stringmanipulationservices.service.IUpperLower;
 import common.clientproxy.ClientProxy;
 
 public class UpperLowerClientProxy extends ClientProxy implements IUpperLower {

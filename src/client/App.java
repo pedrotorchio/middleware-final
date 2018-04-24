@@ -1,8 +1,7 @@
 package client;
 
-import StringExtractorService.service.IStringExtractor;
-import StringExtractorService.service.IUpperLower;
-import StringExtractorService.service.UpperLowerService;
+import stringmanipulationservices.service.IStringExtractor;
+import stringmanipulationservices.service.IUpperLower;
 import client.clientproxy.StringExtractorClientProxy;
 import client.clientproxy.UpperLowerClientProxy;
 import names.NamingProxy;

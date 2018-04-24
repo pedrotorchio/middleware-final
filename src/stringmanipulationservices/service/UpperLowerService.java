@@ -1,4 +1,4 @@
-package StringExtractorService.service;
+package stringmanipulationservices.service;
 
 import common.remoteservice.RemoteService;
 

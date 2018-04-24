@@ -1,7 +1,4 @@
-package StringExtractorService.service;
-
-import java.io.IOException;
-import java.rmi.UnknownHostException;
+package stringmanipulationservices.service;
 
 public interface IStringExtractor {
     String getVowels(String original);

@@ -1,7 +1,7 @@
-package StringExtractorService;
+package stringmanipulationservices;
 
-import StringExtractorService.service.StringExtractorService;
-import StringExtractorService.service.UpperLowerService;
+import stringmanipulationservices.service.StringExtractorService;
+import stringmanipulationservices.service.UpperLowerService;
 import common.invoker.Invoker;
 import common.remoteservice.RemoteService;
 import common.requestor.Invocation;

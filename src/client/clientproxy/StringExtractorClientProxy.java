@@ -1,6 +1,6 @@
 package client.clientproxy;
 
-import StringExtractorService.service.IStringExtractor;
+import stringmanipulationservices.service.IStringExtractor;
 import common.clientproxy.ClientProxy;
 
 public class StringExtractorClientProxy extends ClientProxy implements IStringExtractor {
