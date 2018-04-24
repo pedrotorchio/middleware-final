@@ -1,25 +1,66 @@
 package names;
 
 import common.clientproxy.ClientProxy;
+import common.remoteservice.RemoteService;
+import common.servicerepository.ServiceRepository;
 
 import java.net.UnknownHostException;
-import java.util.ArrayList;
+import java.rmi.Remote;
+import java.util.Iterator;
 
-public class NamingRepository implements INaming{
-    protected ArrayList<NamingRecord> repository = new ArrayList();
+public class NamingRepository extends RemoteService implements INaming {
 
-    @Override
-    public void bind(String name, ClientProxy proxy) throws UnknownHostException {
-        repository.add(new NamingRecord(name, proxy));
+    ServiceRepository repository = new ServiceRepository();
+
+    public NamingRepository(){
+        uid = "naming-service";
     }
 
-    @Override
-    public ClientProxy lookup(String name) throws UnknownHostException {
-        return repository.get(repository.indexOf(name)).getProxy();
+    public <T extends RemoteService> T lookup(String uid) {
+        return (T)repository.lookup(uid);
     }
 
-    @Override
+    public INaming bind(String uid, RemoteService service) {
+        repository.bind(uid, service);
+        return this;
+    }
+
     public String[] list() throws UnknownHostException {
-        return repository.stream().map(record -> record.getName()).toArray(size -> new String[size]);
+        String[] names = new String[repository.size()];
+
+        Iterator<String> keys = repository.keys().asIterator();
+        for(int i = 0 ; keys.hasNext() ; i++)
+            names[i] = keys.next();
+        return names;
+    }
+
+    public String call(String name, String... parameters) {
+        String result = "";
+        String arg0, arg1, arg2, arg3;
+        switch(name){
+            case "lookup":
+                RemoteService service = lookup(parameters[0]);
+                if(service == null)
+                    result = "null";
+                else
+                    result = service.toString();
+
+                break;
+            case "bind":
+                arg0 = parameters[0];
+                arg1 = parameters[1];
+                arg2 = parameters[2];
+
+                RemoteService proxy = new ClientProxy()
+                                .setHost(arg0)
+                                .setPort(Integer.parseInt(arg1))
+                                .setUid(arg2);
+                bind(arg2, proxy);
+
+                result = proxy.toString();
+
+        }
+
+        return result;
     }
 }

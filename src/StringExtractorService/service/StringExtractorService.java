@@ -5,36 +5,41 @@ import common.remoteservice.RemoteService;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class StringExtractorService extends RemoteService implements IStringExtractor {
 
-    public StringExtractorService() throws UnknownHostException {
-        super("str-extractor");
+    public StringExtractorService(){
+        uid = "str-extractor";
     }
 
     @Override
     public String getVowels(String original) {
         System.out.println("getVowels " + original);
-        String vowels = "";
-        char c;
-        for(int i = 0; i < original.length() ; i++)
-            if(isVowel(c = original.charAt(i)))
-                vowels += c;
 
-        return vowels;
+        return filter(original, character -> isVowel(character));
     }
 
     @Override
     public String getConsonants(String original) {
         System.out.println("getConsonants " + original);
-        String consonants = "";
-        char c;
-        for(int i = 0; i < original.length() ; i++)
-            if(!isVowel(c = original.charAt(i)))
-                consonants += c;
 
-        return consonants;
+        return filter(original, character -> !isVowel(character) && !character.equals(" "));
+    }
+
+    public String filter(String original, Predicate<String> check){
+        String filtered = "";
+        String c;
+        for(int i = 0; i < original.length() ; i++)
+            if(check.test((c = ""+original.charAt(i))))
+                filtered += c;
+
+        System.out.println("filter");
+        System.out.println(original);
+        System.out.println(filtered);
+        return filtered;
     }
 
 
@@ -47,15 +52,20 @@ public class StringExtractorService extends RemoteService implements IStringExtr
                 arg1 = parameters[0];
                 result = getVowels(arg1);
                 break;
-            case "getConsonantes":
+            case "getConsonants":
                 arg1 = parameters[0];
                 result = getConsonants(arg1);
                 break;
+
+            default:
+                result = "!METHOD NOT FOUND";
         }
 
         return result;
     }
-
+    protected boolean isVowel(String c){
+        return isVowel(c.charAt(0));
+    }
     protected boolean isVowel(char c){
         return c == 'a' || c == 'A' ||
                c == 'e' || c == 'E' ||

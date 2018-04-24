@@ -7,7 +7,7 @@ import java.util.Arrays;
 public class Invocation {
     protected String uid;
     protected int port;
-    protected InetAddress ip;
+    protected String ip;
     protected String methodName;
     protected String[] parameters;
     protected String result;
@@ -24,7 +24,7 @@ public class Invocation {
         this.port = port;
         return this;
     }
-    public Invocation setIp(InetAddress ip){
+    public Invocation setIp(String ip){
         this.ip = ip;
         return this;
     }
@@ -46,7 +46,7 @@ public class Invocation {
         return parameters;
     }
 
-    public InetAddress getIp() {
+    public String getIp() {
         return ip;
     }
 
@@ -66,7 +66,7 @@ public class Invocation {
         String about = "Invocation: \n";
 
         if(getIp() != null)
-            about += "Host: " + getIp().getHostAddress() + ":" + getPort() + "\n";
+            about += "Host: " + getIp() + ":" + getPort() + "\n";
 
 
         about += "Method: " + methodName + " @ " + getUid() + "\n";

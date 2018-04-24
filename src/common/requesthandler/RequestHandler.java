@@ -28,7 +28,7 @@ public class RequestHandler {
         return this;
     }
     public RequestHandler send() throws IOException{
-        System.out.println("Sending");
+        System.out.print("Sending ");
         System.out.println(request.toString() + "\n");
 
         out.write(
@@ -49,7 +49,7 @@ public class RequestHandler {
                 req.addHeader("port", ""+sock.getPort());
         request = req;
 
-        System.out.println("Receiving");
+        System.out.print("Receiving ");
         System.out.println(request.toString() + "\n");
 
         return this;

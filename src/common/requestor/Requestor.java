@@ -17,17 +17,14 @@ public class Requestor<T> {
 
     public Invocation invoke(Invocation invoc){
 
-        System.out.println(invoc.toString());
-        System.out.println();
+        System.out.println("Invoking " + invoc.getMethodName() + "@" + invoc.getUid() + "\n");
 
         Request req  = mkRequest(invoc);
         Socket sock  = null;
-        Request resp = null;
         try {
             sock = mkSocket(invoc);
 
-
-            resp = new RequestHandler(sock, req)
+            req = new RequestHandler(sock, req)
                     .send()
                     .receive()
                     .getRequest();
@@ -36,20 +33,20 @@ public class Requestor<T> {
             e.printStackTrace();
         }
 
-        return invoc.setResult(resp.getBody());
+        return invoc.setResult(req.getBody());
     }
 
     public Socket mkSocket(Invocation invoc) throws IOException {
         return new Socket(
-                invoc.getIp().getHostAddress(),
+                invoc.getIp(),
                 invoc.getPort());
     }
     public Request mkRequest(Invocation invoc){
         Request req = new Request();
-        req.addHeader("host", invoc.getIp().getHostAddress());
+        req.addHeader("host", invoc.getIp());
         req.addHeader("port", ""+invoc.getPort());
         req.setBody(mkBody(
-                Arrays.toString(invoc.getParameters()),
+                Arrays.toString(invoc.getParameters()).replaceAll(", ", ","),
                 invoc.getMethodName(),
                 invoc.getUid())
         );
@@ -76,7 +73,7 @@ public class Requestor<T> {
                              .setObjectId(uid)
                              .setParameters(parameters.toArray(new String[1]));
 
-        System.out.println(invocation.toString());
+        System.out.println(invocation.toString() + "\n");
 
         return invocation;
     }
