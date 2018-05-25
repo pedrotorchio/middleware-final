@@ -1,18 +1,20 @@
 package names;
 
 import common.clientproxy.ClientProxy;
+import common.remoteservice.InstanceService;
 import common.remoteservice.RemoteService;
+import common.remoteservice.Service;
+import common.requesthandler.Request;
+import common.requestor.exceptions.NotFoundException;
 import common.servicerepository.ServiceRepository;
 
-import java.net.UnknownHostException;
-import java.rmi.Remote;
 import java.util.Iterator;
 
-public class NamingRepository extends RemoteService implements INaming {
+public class NamingService extends InstanceService implements INaming {
 
-    ServiceRepository repository = new ServiceRepository();
+    ServiceRepository<Service> repository = new ServiceRepository();
 
-    public NamingRepository(){
+    public NamingService() {
         uid = "naming-service";
     }
 
@@ -20,12 +22,13 @@ public class NamingRepository extends RemoteService implements INaming {
         return (T)repository.lookup(uid);
     }
 
-    public INaming bind(String uid, RemoteService service) {
+    public INaming bind(String uid, Service service) {
+
         repository.bind(uid, service);
         return this;
     }
 
-    public String[] list() throws UnknownHostException {
+    public String[] list() {
         String[] names = new String[repository.size()];
 
         Iterator<String> keys = repository.keys().asIterator();
@@ -34,15 +37,19 @@ public class NamingRepository extends RemoteService implements INaming {
         return names;
     }
 
-    public String call(String name, String... parameters) {
+
+    public Request execute(Request req, String methodname, String... parameters) {
         String result = "";
         String arg0, arg1, arg2, arg3;
-        switch(name){
+
+        switch (methodname) {
             case "lookup":
                 RemoteService service = lookup(parameters[0]);
-                if(service == null)
-                    result = "null";
-                else
+
+                if (service == null) {
+                    req.addHeader("error", NotFoundException.CODE);
+                    result = "Serviço não encontrado.";
+                } else
                     result = service.toString();
 
                 break;
@@ -51,16 +58,20 @@ public class NamingRepository extends RemoteService implements INaming {
                 arg1 = parameters[1];
                 arg2 = parameters[2];
 
-                RemoteService proxy = new ClientProxy()
-                                .setHost(arg0)
-                                .setPort(Integer.parseInt(arg1))
-                                .setUid(arg2);
+                ClientProxy proxy = new ClientProxy();
+                proxy.setHost(arg0);
+                proxy.setPort(Integer.parseInt(arg1));
+                proxy.setUid(arg2);
+
                 bind(arg2, proxy);
 
                 result = proxy.toString();
-
         }
+        req.setBody(result);
+        return req;
+    }
 
-        return result;
+    public boolean isProtected() {
+        return false;
     }
 }

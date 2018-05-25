@@ -2,9 +2,11 @@ package common.requestor;
 
 import common.requesthandler.Request;
 import common.requesthandler.RequestHandler;
+import common.requestor.exceptions.InvalidMethodException;
+import common.requestor.exceptions.NotFoundException;
+import common.requestor.exceptions.UnauthorizedException;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,26 +17,37 @@ public class Requestor<T> {
     static final String protocolFormat = "%s/%s@%s"; // ([arg1, arg2, arg3]/methodName@objUid)
     static final String captureGroups  = "(.*)/(.*)@(.*)";
 
-    public Invocation invoke(Invocation invoc){
+
+    public Invocation invoke(Invocation invoc) throws IOException, InvalidMethodException, UnauthorizedException, NotFoundException {
 
         System.out.println("Invoking " + invoc.getMethodName() + "@" + invoc.getUid() + "\n");
 
-        Request req  = mkRequest(invoc);
-        Socket sock  = null;
-        try {
-            sock = mkSocket(invoc);
+        Request req = mkRequest(invoc);
+        Socket sock = mkSocket(invoc);
 
-            req = new RequestHandler(sock, req)
-                    .send()
-                    .receive()
-                    .getRequest();
+        req = new RequestHandler(sock, req)
+                .send()
+                .receive()
+                .getRequest();
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (req.getHeader().containsKey("error")) {
+            switch (req.getHeader("error")) {
+                case InvalidMethodException.CODE:
+                    throw new InvalidMethodException(invoc);
+                case UnauthorizedException.CODE:
+                    throw new UnauthorizedException();
+                case NotFoundException.CODE:
+                    throw new NotFoundException("Método");
+            }
         }
+        invoc = new Invocation()
+                .setResult(req.getBody())
+                .setHeader(req.getHeader());
+
 
         return invoc.setResult(req.getBody());
     }
+
 
     public Socket mkSocket(Invocation invoc) throws IOException {
         return new Socket(
@@ -42,9 +55,9 @@ public class Requestor<T> {
                 invoc.getPort());
     }
     public Request mkRequest(Invocation invoc){
+
         Request req = new Request();
-        req.addHeader("host", invoc.getIp());
-        req.addHeader("port", ""+invoc.getPort());
+        req.setHeader(invoc.getHeader());
         req.setBody(mkBody(
                 Arrays.toString(invoc.getParameters()).replaceAll(", ", ","),
                 invoc.getMethodName(),

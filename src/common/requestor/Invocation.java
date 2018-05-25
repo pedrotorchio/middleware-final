@@ -1,19 +1,31 @@
 package common.requestor;
 
-import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.Arrays;
+import common.requesthandler.Request;
 
-public class Invocation {
+import java.util.Arrays;
+import java.util.Hashtable;
+
+public class Invocation extends Request {
     protected String uid;
     protected int port;
     protected String ip;
     protected String methodName;
     protected String[] parameters;
-    protected String result;
 
+    public Invocation() {
+    }
+
+    public Invocation(Invocation other) {
+        super(other);
+
+        uid = other.getUid();
+        port = other.getPort();
+        ip = other.getIp();
+        methodName = other.getMethodName();
+        parameters = other.getParameters();
+    }
     public Invocation setResult(String result) {
-        this.result = result;
+        setBody(result);
         return this;
     }
     public Invocation setObjectId(String uid){
@@ -38,6 +50,10 @@ public class Invocation {
         return this;
     }
 
+    public Invocation setHeader(Hashtable<String, String> header) {
+        super.setHeader(header);
+        return this;
+    }
     public String getMethodName() {
         return methodName;
     }
@@ -59,7 +75,7 @@ public class Invocation {
     }
 
     public String getResult() {
-        return result;
+        return getBody();
     }
 
     public String toString(){

@@ -1,50 +1,40 @@
 package stringmanipulationservices;
 
+import common.invoker.Invoker;
+import common.namingproxy.NamingProxy;
+import common.remoteservice.InstanceService;
+import common.requestor.Invocation;
 import stringmanipulationservices.service.StringExtractorService;
 import stringmanipulationservices.service.UpperLowerService;
-import common.invoker.Invoker;
-import common.remoteservice.RemoteService;
-import common.requestor.Invocation;
-import names.NamingProxy;
-
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 public class StringManipulationServiceServer {
-    static String HOST;
 
-    static {
-        try {
-            HOST = InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-    }
+    static final int PORT = 8609;
+    static final String HOST = "localhost";
 
-    static int PORT = 8609;
-
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception {
 
         // criar instancia do serviço
-        RemoteService strExt = new StringExtractorService()
-                .setHost(HOST)
-                .setPort(PORT);
-        RemoteService uplow  = new UpperLowerService()
-                .setHost(HOST)
-                .setPort(PORT);
-        try {
+        InstanceService strExt = new StringExtractorService();
+        strExt.setHost(HOST);
+        strExt.setPort(PORT);
+        InstanceService uplow = new UpperLowerService();
+        uplow.setHost(HOST);
+        uplow.setPort(PORT);
+
             // registrar nome
             new NamingProxy("localhost")
                     .bind(strExt.getUid(), strExt)
                     .bind(uplow.getUid(), uplow);
 
+
             new Invoker()
+
                     // registrar instancia
                     .registerService(strExt)
                     .registerService(uplow)
                     .setCallback(new Invoker.Callback(){
-                        public void run(String result, RemoteService service, Invocation invoc) {
+                        public void run(String result, InstanceService service, Invocation invoc) {
                             System.out.println(invoc.getMethodName() + "." + invoc.getUid() + " = " + result + "\n");
                         }
                     })
@@ -52,9 +42,6 @@ public class StringManipulationServiceServer {
                     .listen(PORT);
 
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
     }
 }

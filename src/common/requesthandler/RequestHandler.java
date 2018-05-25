@@ -2,9 +2,10 @@ package common.requesthandler;
 
 import common.marshaller.Marshaller;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Arrays;
 
 public class RequestHandler {
     protected Socket sock;
@@ -41,23 +42,28 @@ public class RequestHandler {
     }
     public RequestHandler receive() throws IOException {
 
-        Request req = new Marshaller()
+        request = new Marshaller()
                             .unmarshall(in);
-        String body = req.getBody();
-                req.setBody(body);
-                req.addHeader("client", sock.getRemoteSocketAddress().toString());
-                req.addHeader("port", ""+sock.getPort());
-        request = req;
+        request.addHeader("client", sock.getRemoteSocketAddress().toString());
+        request.addHeader("port", "" + sock.getPort());
+
 
         System.out.print("Receiving ");
         System.out.println(request.toString() + "\n");
 
         return this;
     }
-    public void close() throws IOException {
-        in.close();
-        out.close();
-        sock.close();
+
+    public void close() {
+
+        try {
+            in.close();
+            out.close();
+            sock.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     protected void mkStreams() throws IOException {

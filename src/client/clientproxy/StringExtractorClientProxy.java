@@ -1,7 +1,7 @@
 package client.clientproxy;
 
-import stringmanipulationservices.service.IStringExtractor;
 import common.clientproxy.ClientProxy;
+import stringmanipulationservices.service.IStringExtractor;
 
 public class StringExtractorClientProxy extends ClientProxy implements IStringExtractor {
 
@@ -11,13 +11,23 @@ public class StringExtractorClientProxy extends ClientProxy implements IStringEx
     @Override
     public String getVowels(String original){
 
-        return call("getVowels", original);
+        try {
+            return call("getVowels", original);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
     public String getConsonants(String original){
 
-        return call("getConsonants", original);
+        try {
+            return call("getConsonants", original);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 

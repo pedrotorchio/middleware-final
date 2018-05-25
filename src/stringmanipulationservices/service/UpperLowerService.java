@@ -1,8 +1,9 @@
 package stringmanipulationservices.service;
 
-import common.remoteservice.RemoteService;
+import common.remoteservice.InstanceService;
+import common.requesthandler.Request;
 
-public class UpperLowerService extends RemoteService implements IUpperLower {
+public class UpperLowerService extends InstanceService implements IUpperLower {
 
     public UpperLowerService(){
         uid = "upper-lower";
@@ -18,17 +19,25 @@ public class UpperLowerService extends RemoteService implements IUpperLower {
         return original.toLowerCase();
     }
 
-    @Override
-    public String call(String name, String... parameters) {
+
+    public Request execute(Request req, String name, String... args) {
         String result = "";
+
         switch(name){
             case "toUppercase":
-                result = toUppercase(parameters[0]);
+                result = toUppercase(args[0]);
                 break;
             case "toLowercase":
-                result = toUppercase(parameters[0]);
+                result = toLowercase(args[0]);
                 break;
         }
-        return result;
+
+        req.setBody(result);
+
+        return req;
+    }
+
+    public boolean isProtected() {
+        return true;
     }
 }

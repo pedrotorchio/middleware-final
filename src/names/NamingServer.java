@@ -2,39 +2,26 @@ package names;
 
 
 import common.invoker.Invoker;
-import common.remoteservice.RemoteService;
+import common.remoteservice.InstanceService;
 import common.requestor.Invocation;
-
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 public class NamingServer {
 
-    static String HOST;
-
-    static {
-        try {
-            HOST = InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-    }
 
     public static final int PORT = 9000;
+    static final String HOST = "localhost";
 
     public static void main(String[] args){
 
-        RemoteService namingService = new NamingRepository()
-                .setPort(PORT)
-                .setHost(HOST);
-        try {
+        NamingService namingService = new NamingService();
+        namingService.setPort(PORT);
+        namingService.setHost(HOST);
 
             new Invoker()
                     .registerService(namingService)
                     .setCallback(new Invoker.Callback(){
-                        protected void run(String result, RemoteService service, Invocation invoc) {
-                            String message = "";
+                        protected void run(String result, InstanceService service, Invocation invoc) {
+                            String message;
 
                             if (invoc.getMethodName().equals("bind"))
                                 message = ("SERVIÇO " + result + " CADASTRADO.");
@@ -47,10 +34,6 @@ public class NamingServer {
                         }
                     })
                     .listen(PORT);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
     }
 }

@@ -1,13 +1,12 @@
 package names;
 
-import common.clientproxy.ClientProxy;
 import common.remoteservice.RemoteService;
-import common.servicerepository.ServiceRepository;
-
-import java.net.UnknownHostException;
+import common.remoteservice.Service;
 
 public interface INaming {
-    <T extends RemoteService> T lookup(String uid);
-    INaming bind(String uid, RemoteService service);
-    String[] list() throws UnknownHostException;
+    <T extends RemoteService> T lookup(String uid) throws Exception;
+
+    INaming bind(String uid, Service service) throws Exception;
+
+    String[] list() throws Exception;
 }

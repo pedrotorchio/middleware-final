@@ -1,10 +1,12 @@
 package stringmanipulationservices.service;
 
-import common.remoteservice.RemoteService;
+import common.remoteservice.InstanceService;
+import common.requesthandler.Request;
+import common.requestor.exceptions.NotFoundException;
 
 import java.util.function.Predicate;
 
-public class StringExtractorService extends RemoteService implements IStringExtractor {
+public class StringExtractorService extends InstanceService implements IStringExtractor {
 
     public StringExtractorService(){
         uid = "str-extractor";
@@ -31,15 +33,11 @@ public class StringExtractorService extends RemoteService implements IStringExtr
             if(check.test((c = ""+original.charAt(i))))
                 filtered += c;
 
-        System.out.println("filter");
-        System.out.println(original);
-        System.out.println(filtered);
         return filtered;
     }
 
 
-
-    public String call(String name, String... parameters){
+    public Request execute(Request req, String name, String... parameters) {
         String result = "";
         String arg1;
         switch(name){
@@ -53,11 +51,19 @@ public class StringExtractorService extends RemoteService implements IStringExtr
                 break;
 
             default:
-                result = "!METHOD NOT FOUND";
+                req.addHeader("error", NotFoundException.CODE);
+                result = "Método não encontrado.";
         }
 
-        return result;
+        req.setBody(result);
+        return req;
     }
+
+    @Override
+    public boolean isProtected() {
+        return false;
+    }
+
     protected boolean isVowel(String c){
         return isVowel(c.charAt(0));
     }
@@ -68,4 +74,5 @@ public class StringExtractorService extends RemoteService implements IStringExtr
                c == 'o' || c == 'O' ||
                c == 'u' || c == 'U';
     }
+
 }

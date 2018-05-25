@@ -1,19 +1,18 @@
 package common.servicerepository;
 
-import common.clientproxy.ClientProxy;
-import common.remoteservice.RemoteService;
+import common.remoteservice.Service;
 
-import java.rmi.Remote;
 import java.util.Hashtable;
 
-public class ServiceRepository extends Hashtable<String, RemoteService> {
+public class ServiceRepository<T extends Service> extends Hashtable<String, T> {
 
-    public RemoteService lookup(String uid){
+    public T lookup(String uid) {
         System.out.println("Lookup " + uid + " in");
         System.out.println("\t" + toString() + "\n");
         return get(uid);
     }
-    public ServiceRepository bind(String uid, RemoteService service){
+
+    public ServiceRepository<T> bind(String uid, T service) {
         put(uid, service);
         return this;
     }
