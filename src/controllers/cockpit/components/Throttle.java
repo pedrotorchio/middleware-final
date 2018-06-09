@@ -22,31 +22,46 @@ public class Throttle extends InstanceService implements IThrottle {
 
     protected int power(int power){
         power = power/4;
+        int reached = 0;
 
+        setIntermediateValue(""+0);
         plane.ell.power(power);
-        plane.elr.power(power);
-        plane.erl.power(power);
-        plane.err.power(power);
+        reached += plane.ell.getPower();
+        setIntermediateValue(""+reached);
 
-        return plane.ell.getPower() + plane.elr.getPower() + plane.erl.getPower() + plane.err.getPower();
+        plane.elr.power(power);
+        reached += plane.elr.getPower();
+        setIntermediateValue(""+reached);
+
+        plane.erl.power(power);
+        reached += plane.erl.getPower();
+        setIntermediateValue(""+reached);
+
+        plane.err.power(power);
+        reached += plane.err.getPower();
+        setIntermediateValue(""+reached);
+
+        return reached;
+
     }
 
     public boolean on() {
+        setIntermediateValue("false");
         plane.ell.on();
         plane.elr.on();
         plane.erl.on();
         plane.err.on();
-
+        setIntermediateValue("true");
         return true;
     }
 
     public boolean off() {
-
+        setIntermediateValue("false");
         plane.ell.off();
         plane.elr.off();
         plane.erl.off();
         plane.err.off();
-
+        setIntermediateValue("true");
         return true;
 
     }

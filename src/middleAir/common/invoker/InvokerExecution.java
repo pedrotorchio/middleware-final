@@ -22,9 +22,6 @@ public class InvokerExecution extends Invoker{
 
             new Executor(rh).start();
 
-            if(req.getHeader().containsKey("timeout"))
-                new Clock(rh).start();
-
         } catch (IOException e) {
             req = new Request()
                     .addHeader("error", "500")
@@ -41,57 +38,37 @@ public class InvokerExecution extends Invoker{
     protected class ParallelExecutions extends Thread{
         RequestHandler rh;
 
-        public ParallelExecutions(RequestHandler rh){
+
+
+    }
+
+    protected class Executor extends ParallelExecutions {
+
+        RequestHandler rh;
+        InstanceService service;
+        Request req;
+
+        public Executor(RequestHandler rh){
             this.rh = rh;
         }
 
-    }
-
-    protected class Clock extends ParallelExecutions{
-        public static final long INTERVAL = 500; // meio segundo
-        protected TimeoutInterceptor ti;
-        public Clock(RequestHandler rh){
-            super(rh);
-            ti = new TimeoutInterceptor();
-        }
         public void run(){
-            Request req = rh.getRequest().clone();
+            Clock clock = new Clock();
+                  clock.start();
 
-            Time toTime = ti.getTime(req);
+            req = rh.getRequest();
+            req = executeRequestedService(req);
 
-            while(!ti.hasPassed(toTime)){
-                try {
-                    Thread.sleep(INTERVAL);
+            clock.interrupt();
 
-                } catch (InterruptedException e) {
-                    break;
-                }
-            }
-
-            req = new TimeoutException("COLOCAR TEMPO AQUI").interceptRequest(req);
-
+            send(req);
+        }
+        protected void send(Request req){
             sendRequest(rh, req);
         }
-
-    }
-    protected class Executor extends ParallelExecutions {
-
-
-        public Executor(RequestHandler rh){
-            super(rh);
-        }
-
-        public void run(){
-            Request req = rh.getRequest().clone();
-                    req = executeRequestedService(req);
-
-                    sendRequest(rh, req);
-        }
-
         protected Request executeRequestedService(Request req) {
 
             Invocation invoc;
-            InstanceService service;
             String result = "";
 
             invoc = new Requestor().mkInvocation(req);
@@ -106,6 +83,7 @@ public class InvokerExecution extends Invoker{
             } else if (!service.isProtected() || authorizeRequest(req))
 
                 req = service.execute(req, invoc.getMethodName(), invoc.getParameters());
+                req.addHeader("timeout", "OK");
 
             callback.execute(result, service, invoc);
 
@@ -127,6 +105,30 @@ public class InvokerExecution extends Invoker{
 
             return true;
         }
-    }
 
+        private class Clock extends ParallelExecutions{
+
+            public static final long INTERVAL = 500; // meio segundo
+            protected TimeoutInterceptor ti = new TimeoutInterceptor();;
+
+            public void run(){
+                Time toTime = ti.getTime(req);
+
+                while(!ti.hasPassed(toTime)){
+                    try {
+                        Thread.sleep(INTERVAL);
+
+                    } catch (InterruptedException e) {
+                        // se for interrompido, pode sair sem fazer mais nada
+                        return;
+                    }
+                }
+                if(!isInterrupted()){
+                    req = new TimeoutException(service.getIntermediateValue()).interceptRequest(req);
+
+                    send(req);
+                }
+            }
+        }
+    }
 }

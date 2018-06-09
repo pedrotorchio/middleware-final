@@ -11,11 +11,10 @@ public class YokeProxy extends ClientProxy implements IYoke {
     public YokeProxy(ClientProxy original){
 
         super(original);
-        addHeader("timeout", Time.secondsLater(40).toString());
     }
     @Override
     public int steer(int deg) {
-
+        addHeader("timeout", Time.secondsLater(60).toString());
         try {
             return Integer.parseInt(call("steer", "" + deg));
 
@@ -30,7 +29,7 @@ public class YokeProxy extends ClientProxy implements IYoke {
 
     @Override
     public int rise(int deg) {
-
+        addHeader("timeout", Time.secondsLater(60).toString());
         try {
             return Integer.parseInt(call("rise", "" + deg));
 

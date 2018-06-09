@@ -11,7 +11,7 @@ public class MonitorProxy extends ClientProxy implements IOutputChannel {
         addHeader("timeout", Time.secondsLater(2).toString());
     }
     public void write(String message){
-
+        addHeader("timeout", Time.secondsLater(1).toString());
         try {
             call("write", message);
 
@@ -19,7 +19,7 @@ public class MonitorProxy extends ClientProxy implements IOutputChannel {
     }
 
     public void writeError(String message){
-
+        addHeader("timeout", Time.secondsLater(1).toString());
 
         try {
             call("writeError", message);

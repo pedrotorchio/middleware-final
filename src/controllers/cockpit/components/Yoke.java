@@ -17,7 +17,10 @@ public class Yoke extends InstanceService implements IYoke{
         // angulo positivo, sentido horário
         System.out.println("Steering to " + degrees + "deg" + " " + (degrees > 0 ? "CW" : "CCW"));
 
-        rotateFlap(degrees/2, -degrees/2);
+        rotateFlap(degrees/2, -degrees/2, (left,right) -> {
+            setIntermediateValue(""+(plane.fl.getAngle() - plane.fr.getAngle()));
+            return true;
+        });
 
         return plane.fl.getAngle() - plane.fr.getAngle();
 
@@ -27,7 +30,10 @@ public class Yoke extends InstanceService implements IYoke{
 
         System.out.println("Rising to " + degrees + "deg"+ " " + (degrees > 0 ? "Up" : "Down"));
 
-        rotateFlap(degrees/2, degrees/2, (left,right) -> left==right);
+        rotateFlap(degrees/2, degrees/2, (left,right) -> {
+            setIntermediateValue(""+(plane.fl.getAngle() + plane.fr.getAngle()));
+            return left==right;
+        });
 
         return plane.fl.getAngle() + plane.fr.getAngle();
 

@@ -1,6 +1,7 @@
 package middleAir.security.auth;
 
 import middleAir.common.clientproxy.ClientProxy;
+import middleAir.common.invoker.Time;
 import middleAir.common.types.Credentials;
 
 public class AuthProxy extends ClientProxy implements IAuth {
@@ -17,7 +18,7 @@ public class AuthProxy extends ClientProxy implements IAuth {
 
     public Credentials authenticate(Credentials person){
         String result = null;
-
+        addHeader("timeout", Time.secondsLater(20).toString());
 
         try {
             result = call("authenticate", person.uid, person.key);
@@ -32,6 +33,7 @@ public class AuthProxy extends ClientProxy implements IAuth {
     }
 
     public boolean authorize(Credentials person) {
+        addHeader("timeout", Time.secondsLater(1).toString());
         String result = "";
         /**
          * SE NÃO FOR POSSÍVEL VERIFICAR AUTORIZAÇÃO DO COMANDO (COMO QUANDO HOUVER ERRO DE INFRAESTRUTURA),
