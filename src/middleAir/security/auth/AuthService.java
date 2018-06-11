@@ -6,9 +6,11 @@ import middleAir.common.exceptions.UnauthorizedException;
 import middleAir.common.remoteservice.InstanceService;
 import middleAir.common.requesthandler.Request;
 import middleAir.common.types.Credentials;
-import org.jasypt.util.text.BasicTextEncryptor;
+import middleAir.security.common.BasicTextEncryptor;
 
 import java.util.Hashtable;
+
+//import org.jasypt.util.text.BasicTextEncryptor;
 
 public class AuthService extends InstanceService implements IAuth{
 
@@ -75,18 +77,23 @@ public class AuthService extends InstanceService implements IAuth{
 
         String uid = parameters[0];
         String key = parameters[1];
+        String result;
 
         switch (methodname) {
             case "authenticate":
-
-                    return authenticate(new Credentials(uid, key)).authKey;
+                result = authenticate(new Credentials(uid, key)).authKey;
+                setReturnMeaning(req, "Authkey para usuario");
+                return result;
 
             case "authorize":
 
                 Credentials cred = new Credentials(uid, null);
                 cred.authKey = key;
 
-                    return authorize(cred) ? "true" : "false";
+                result = authorize(cred) ? "true" : "false";
+                setReturnMeaning(req, "SE usuario foi autorizado");
+
+                return result;
 
             default:
                 return "DEFAULT";

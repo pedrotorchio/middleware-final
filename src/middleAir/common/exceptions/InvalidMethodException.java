@@ -15,4 +15,7 @@ public class InvalidMethodException extends MiddleAirException {
     public static String getCode(){
         return "400";
     }
+    protected String _getCode(){
+        return getCode();
+    }
 }

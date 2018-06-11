@@ -58,6 +58,9 @@ public class Invocation extends Request {
         super.setHeader(header);
         return this;
     }
+    public String getMethodAOR(){
+       return String.format("%s@%s", getMethodName(), getUid());
+    }
     public String getMethodName() {
         return methodName;
     }

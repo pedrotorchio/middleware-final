@@ -17,10 +17,7 @@ public class Yoke extends InstanceService implements IYoke{
         // angulo positivo, sentido horário
         System.out.println("Steering to " + degrees + "deg" + " " + (degrees > 0 ? "CW" : "CCW"));
 
-        rotateFlap(degrees/2, -degrees/2, (left,right) -> {
-            setIntermediateValue(""+(plane.fl.getAngle() - plane.fr.getAngle()));
-            return true;
-        });
+        rotateFlap(degrees/2, -degrees/2, (left,right) -> true);
 
         return plane.fl.getAngle() - plane.fr.getAngle();
 
@@ -30,10 +27,7 @@ public class Yoke extends InstanceService implements IYoke{
 
         System.out.println("Rising to " + degrees + "deg"+ " " + (degrees > 0 ? "Up" : "Down"));
 
-        rotateFlap(degrees/2, degrees/2, (left,right) -> {
-            setIntermediateValue(""+(plane.fl.getAngle() + plane.fr.getAngle()));
-            return left==right;
-        });
+        rotateFlap(degrees/2, degrees/2, (left,right) -> left==right);
 
         return plane.fl.getAngle() + plane.fr.getAngle();
 
@@ -41,16 +35,14 @@ public class Yoke extends InstanceService implements IYoke{
     private interface Reached{
         boolean check(int left, int right);
     }
-    public void rotateFlap(final int leftRotation, final int rightRotation){
-        rotateFlap(leftRotation, rightRotation, (left,right)->true);
-    }
+
     public void rotateFlap(final int leftGoal, final int rightGoal, Reached extrachecker){
 
         int i = 0,
             leftRotation = 0,
             rightRotation = 0;
 
-        // enquanto os criterios de erro nao forem atendidos (erro < 10%) ou tentativas ainda não ultrapassarem 10
+        // enquanto os criterios de erro nao forem atendidos (erro < 10%) ou tentativas ainda não ultrapassarem 12
         System.out.print("Rotating Flaps (" + leftGoal + ", " + rightGoal+ ") = ");
         do {
 
@@ -65,17 +57,15 @@ public class Yoke extends InstanceService implements IYoke{
             i++;
 
         }while(
-                // quando criterios forem atendidos OU contagem ultrapassar, pare de tentar
+                // quando criterios forem atendidos OU tempo esgotar, pare de tentar
                 // tentar enquanto criterios NAO forem atendidos E contagem for pequena
                 !( Math.abs(leftGoal - leftRotation)   <= Math.abs(.2*leftGoal) &&
                    Math.abs(rightGoal - rightRotation) <= Math.abs(.2*rightGoal) &&
                     extrachecker.check(leftRotation, rightRotation)) &&
-                        i < 12
+                        !wasInterrupted()
         );
 
         System.out.println("= (" + plane.fl.getAngle() + ", " + plane.fr.getAngle() + ")");
-
-
     }
 
     public String call(Request req, String methodname, String[] parameters) throws MiddleAirException{
@@ -85,10 +75,16 @@ public class Yoke extends InstanceService implements IYoke{
 
         switch (methodname) {
             case "steer":
-                return "" + steer(Integer.parseInt(angle));
+
+                angle = "" + steer(Integer.parseInt(angle));
+                setReturnMeaning(req, "Angulo lateral final");
+                return angle;
 
             case "rise":
-                return "" + rise(Integer.parseInt(angle));
+
+                angle = "" + rise(Integer.parseInt(angle));
+                setReturnMeaning(req, "Angulo frontal final");
+                return angle;
 
             default:
                 return "DEFAULT";

@@ -11,7 +11,7 @@ public class AuthenticationKeyboardProxy extends ClientProxy implements IAuthent
         super(original);
     }
     public Credentials readAuthentication(){
-        addHeader("timeout", Time.secondsLater(600).toString());
+        addHeader("timeout", Time.secondsLater(10).toString());
 
         String result;
         Credentials person = null;

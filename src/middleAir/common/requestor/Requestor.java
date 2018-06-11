@@ -17,12 +17,7 @@ public class Requestor<T> {
 
 
     public Invocation invoke(Invocation invoc)
-            throws IOException,
-                UnauthorizedException,
-                NotFoundException,
-                TimeoutException,
-                HumanInputException,
-                InternalErrorException {
+            throws IOException, NotFoundException, TimeoutException, HumanInputException, UnauthorizedException, InternalErrorException {
 
         System.out.println("Invoking " + invoc.getMethodName() + "@" + invoc.getUid() + "\n");
 
@@ -45,13 +40,9 @@ public class Requestor<T> {
         return invoc.setResult(req.getBody());
     }
     public void throwError(Request req)
-            throws  TimeoutException,
-                    InternalErrorException,
-                    HumanInputException,
-                    UnauthorizedException,
-                    NotFoundException {
+            throws TimeoutException, InternalErrorException, HumanInputException, UnauthorizedException, NotFoundException {
 
-            String code = req.getBody();
+            String code = req.getHeader("error");
             String msg  = req.getBody();
 
             if(code.equals(TimeoutException.getCode()))

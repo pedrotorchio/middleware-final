@@ -17,4 +17,7 @@ public class HumanInputException extends MiddleAirException {
     public static String getCode(){
         return "301";
     }
+    protected String _getCode(){
+        return getCode();
+    }
 }

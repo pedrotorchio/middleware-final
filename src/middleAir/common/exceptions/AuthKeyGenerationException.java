@@ -12,5 +12,7 @@ public class AuthKeyGenerationException extends InternalErrorException {
     public static String getCode(){
         return "501";
     }
-
+    protected String _getCode(){
+        return getCode();
+    }
 }

@@ -1,81 +1,123 @@
 package controllers.cockpit.components;
 
+import controllers.drivers.Engine;
 import controllers.simulators.Airplane;
 import middleAir.common.exceptions.MiddleAirException;
+import middleAir.common.exceptions.TimeoutException;
 import middleAir.common.remoteservice.InstanceService;
 import middleAir.common.requesthandler.Request;
 
 public class Throttle extends InstanceService implements IThrottle {
     Airplane plane;
 
+    boolean enginesOn = false;
+
     public Throttle(Airplane plane){
         this.plane = plane;
         uid = "air-throttle";
     }
-    public int powerUp(int power) {
+    public int powerUp(int power) throws TimeoutException {
         return power(power);
     }
 
-    public int powerDown(int power) {
+    public int powerDown(int power) throws TimeoutException {
         return power(-power);
     }
 
-    protected int power(int power){
+    protected int power(int power) throws TimeoutException {
         power = power/4;
         int reached = 0;
 
-        setIntermediateValue(""+0);
+        if(wasInterrupted())
+            throwTimeout(""+reached);
         plane.ell.power(power);
         reached += plane.ell.getPower();
-        setIntermediateValue(""+reached);
 
+        if(wasInterrupted())
+            throwTimeout(""+reached);
         plane.elr.power(power);
         reached += plane.elr.getPower();
-        setIntermediateValue(""+reached);
 
+        if(wasInterrupted())
+            throwTimeout(""+reached);
         plane.erl.power(power);
         reached += plane.erl.getPower();
-        setIntermediateValue(""+reached);
 
+        if(wasInterrupted())
+            throwTimeout(""+reached);
         plane.err.power(power);
         reached += plane.err.getPower();
-        setIntermediateValue(""+reached);
 
         return reached;
 
     }
+    private Engine[] getEngineArray(){
+        Engine[] engs = {
+                plane.ell,
+                plane.elr,
+                plane.erl,
+                plane.err
+        };
 
-    public boolean on() {
-        setIntermediateValue("false");
-        plane.ell.on();
-        plane.elr.on();
-        plane.erl.on();
-        plane.err.on();
-        setIntermediateValue("true");
-        return true;
+        return engs;
     }
 
-    public boolean off() {
-        setIntermediateValue("false");
-        plane.ell.off();
-        plane.elr.off();
-        plane.erl.off();
-        plane.err.off();
-        setIntermediateValue("true");
-        return true;
+    public boolean on() throws TimeoutException { // transação
+        return switchEngines(true);
+    }
 
+    public boolean off() throws TimeoutException { // transação
+        return switchEngines(false);
+    }
+
+    public boolean switchEngines(boolean on) throws TimeoutException { //true on, false off
+
+        // liga todas as turbinas
+        // se for interrompido, reverte resultados parciais
+
+        for(Engine engine : getEngineArray()) {
+            if (on)
+                engine.on();
+            else
+                engine.off();
+
+            if(wasInterrupted())
+            {
+                if (!on)
+                    engine.on();
+                else
+                    engine.off();
+
+                throwTimeout("false");
+            }
+        }
+
+        enginesOn = on;
+
+        return true;
     }
 
     public String call(Request req, String methodname, String[] parameters) throws MiddleAirException {
+        String result;
         switch(methodname){
             case "powerUp":
-                return ""+powerUp(Integer.parseInt(parameters[0]));
+
+                result = ""+powerUp(Integer.parseInt(parameters[0]));
+                setReturnMeaning(req, "Potência resultante");
+                return result;
             case "powerDown":
-                return ""+powerDown(Integer.parseInt(parameters[0]));
+                result = ""+powerDown(Integer.parseInt(parameters[0]));
+                setReturnMeaning(req, "Potência resultante");
+                return result;
             case "on":
-                return ""+on();
+                result = ""+on();
+                setReturnMeaning(req, "SE foi possivel ligar TODOS motores");
+                return result;
+
             case "off":
-                return ""+off();
+                result = ""+off();
+                setReturnMeaning(req, "SE foi possivel desligar TODOS motores");
+                return result;
             default:
                 return "DEFAULT";
         }

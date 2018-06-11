@@ -10,4 +10,7 @@ public class InternalErrorException extends MiddleAirException {
     public static String getCode(){
         return "500";
     }
+    protected String _getCode(){
+        return getCode();
+    }
 }

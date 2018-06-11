@@ -26,6 +26,7 @@ public class Cockpit {
         rise(-45);
         off();
 
+        // viaja um pouco
         Thread.sleep(3000);
 
         on();
@@ -36,31 +37,51 @@ public class Cockpit {
         rise(-30);
 
     }
-    public void rise(int angle){
+    public int rise(int angle){
         printTitle("Subindo/Descendo " + angle + " graus");
-        printResult("Ângulo Final:" + yoke.rise(angle));
+        angle = yoke.rise(angle);
+        printResult("Ângulo Final:" + angle);
+
+        return angle;
     }
-    public void steer(int angle){
+    public int steer(int angle){
         printTitle("Virando " + angle + " graus");
-        printResult("Ângulo Final:" + yoke.rise(angle));
+        angle = yoke.rise(angle);
+        printResult("Ângulo Final:" + angle);
+
+        return angle;
     }
-    public void off(){
+    public boolean off(){
         printTitle("Desligando motor");
-        if(throttle.off())
+        boolean off = throttle.off();
+        if(off)
             printResult("Motor Desligado");
+        else
+            printResult("Não foi possível desligar todos os motores");
+
+        return off;
     }
-    public void on(){
+    public boolean on(){
         printTitle("Ligando motor");
-        if(throttle.on())
+        boolean on = throttle.on();
+        if(on)
             printResult("Motor Ligado");
+        else
+            printResult("Não foi possível ligar todos os motores");
+        return on;
     }
-    public void powerUp(int power){
+    public int powerUp(int power){
         printTitle("Acelerando " + power + "pwr");
-        printResult("Potência Final:" + throttle.powerUp(power));
+        power = throttle.powerUp(power);
+        printResult("Potência Final:" + power);
+        return power;
     }
-    public void powerDown(int power){
+    public int powerDown(int power){
         printTitle("Desacelerando " + power + "pwr");
-        printResult("Potência Final:" + throttle.powerDown(power));
+        power = throttle.powerDown(power);
+        printResult("Potência Final:" + power);
+
+        return power;
     }
 
     public void printTitle(String title){

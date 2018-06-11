@@ -1,7 +1,6 @@
 package middleAir.common.invoker;
 
 import middleAir.common.exceptions.NotFoundException;
-import middleAir.common.exceptions.TimeoutException;
 import middleAir.common.exceptions.UnauthorizedException;
 import middleAir.common.remoteservice.InstanceService;
 import middleAir.common.requesthandler.Request;
@@ -12,59 +11,55 @@ import middleAir.common.requestor.Requestor;
 import java.io.IOException;
 
 public class InvokerExecution extends Invoker{
+    protected void receiveRequest(RequestHandler rh) {
 
-    protected Request receiveRequest(RequestHandler rh) {
-        Request req;
+        new Executor(rh).start();
 
-        try {
-            req = rh.receive()
-                    .getRequest();
-
-            new Executor(rh).start();
-
-        } catch (IOException e) {
-            req = new Request()
-                    .addHeader("error", "500")
-                    .setBody("Erro de socket");
-
-            sendRequest(rh, req);
-        }
-
-        return req;
     }
 
     // THREADS
 
-    protected class ParallelExecutions extends Thread{
-        RequestHandler rh;
-
-
-
-    }
-
-    protected class Executor extends ParallelExecutions {
+    protected class Executor extends Thread{
 
         RequestHandler rh;
         InstanceService service;
         Request req;
+        boolean hasTO = false;
 
         public Executor(RequestHandler rh){
             this.rh = rh;
         }
 
         public void run(){
-            Clock clock = new Clock();
-                  clock.start();
 
-            req = rh.getRequest();
-            req = executeRequestedService(req);
+            try {
+                req = rh.receive()
+                        .getRequest();
 
-            clock.interrupt();
+                req = rh.getRequest();
+                req = executeRequestedService(req);
 
-            send(req);
+                sendRequest(req);
+
+            } catch (IOException e) {
+                req = new Request()
+                        .addHeader("error", "500")
+                        .setBody("Erro de socket");
+
+                sendRequest(req);
+
+            }
         }
-        protected void send(Request req){
-            sendRequest(rh, req);
+        protected void sendRequest(Request req){
+            try {
+                if(!rh.isClosed())
+                    rh.setRequest(req)
+                            .send();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            rh.close();
         }
         protected Request executeRequestedService(Request req) {
 
@@ -76,20 +71,35 @@ public class InvokerExecution extends Invoker{
             System.out.println("Object lookup");
             service = repository.lookup(invoc.getUid());
 
-            if (service == null) {
+            if (service == null)
 
                 req = new NotFoundException("Objeto invocado (" + invoc.getUid() + ")").interceptRequest(req);
 
-            } else if (!service.isProtected() || authorizeRequest(req))
+            else if (!service.isProtected() || authorizeRequest(req))
 
-                req = service.execute(req, invoc.getMethodName(), invoc.getParameters());
-                req.addHeader("timeout", "OK");
+                req = executeOrInterrupt(req, invoc);
+
 
             callback.execute(result, service, invoc);
 
             return req;
         }
 
+        protected Request executeOrInterrupt(Request req, Invocation invoc){
+            hasTO = req.getHeader().containsKey("timeout");
+
+            Clock clock = new Clock();
+
+            if(hasTO)
+                clock.start();
+
+            req.addHeader("method", invoc.getMethodAOR());
+            req = service.execute(req, invoc.getMethodName(), invoc.getParameters());
+
+            clock.interrupt();
+
+            return req;
+        }
         protected boolean authorizeRequest(Request req) {
             try {
 
@@ -106,7 +116,7 @@ public class InvokerExecution extends Invoker{
             return true;
         }
 
-        private class Clock extends ParallelExecutions{
+        private class Clock extends Thread{
 
             public static final long INTERVAL = 500; // meio segundo
             protected TimeoutInterceptor ti = new TimeoutInterceptor();;
@@ -114,20 +124,17 @@ public class InvokerExecution extends Invoker{
             public void run(){
                 Time toTime = ti.getTime(req);
 
-                while(!ti.hasPassed(toTime)){
+                while(!ti.hasPassed(toTime) && !isInterrupted()){
                     try {
                         Thread.sleep(INTERVAL);
 
                     } catch (InterruptedException e) {
-                        // se for interrompido, pode sair sem fazer mais nada
-                        return;
+                        break;
                     }
                 }
-                if(!isInterrupted()){
-                    req = new TimeoutException(service.getIntermediateValue()).interceptRequest(req);
+                if(!isInterrupted())
+                    service.interrupt();
 
-                    send(req);
-                }
             }
         }
     }

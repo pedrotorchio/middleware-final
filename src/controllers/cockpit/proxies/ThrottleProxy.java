@@ -12,7 +12,7 @@ public class ThrottleProxy extends ClientProxy implements IThrottle {
     }
 
     public int powerUp(int power) {
-        addHeader("timeout", Time.secondsLater(10).toString());
+        addHeader("timeout", Time.secondsLater(power/100).toString());
         try {
             power = Integer.parseInt(call("powerUp", ""+power));
         } catch( TimeoutException e){
@@ -25,7 +25,7 @@ public class ThrottleProxy extends ClientProxy implements IThrottle {
     }
 
     public int powerDown(int power) {
-        addHeader("timeout", Time.secondsLater(10).toString());
+        addHeader("timeout", Time.secondsLater(power/100).toString());
         try {
             power = Integer.parseInt(call("powerDown", ""+power));
 
@@ -39,26 +39,33 @@ public class ThrottleProxy extends ClientProxy implements IThrottle {
     }
 
     public boolean on() {
-        addHeader("timeout", Time.secondsLater(2).toString());
+        addHeader("timeout", Time.secondsLater(5).toString());
+        String result ;
         try {
-            call("on");
+            result = call("on");
 
+        } catch(TimeoutException e){
+            return e.getMessage().equals("true");
         } catch (Exception e) {
             writeError(e.getMessage());
             return false;
         }
-        return true;
+
+        return result.equals("true");
     }
 
     public boolean off() {
-        addHeader("timeout", Time.secondsLater(2).toString());
+        addHeader("timeout", Time.secondsLater(5).toString());
+        String result;
         try {
-            call("off");
+            result = call("off");
 
+        } catch(TimeoutException e){
+            return e.getMessage().equals("true");
         } catch (Exception e) {
             writeError(e.getMessage());
             return false;
         }
-        return true;
+        return result.equals("true");
     }
 }

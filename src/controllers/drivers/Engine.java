@@ -1,6 +1,6 @@
 package controllers.drivers;
 
-public class Engine extends AirplaneComponentDriver {
+public class Engine extends AirplaneComponentDriver  {
 
     protected final int LAXITY = 50; // %
     protected int power = 0;
@@ -13,6 +13,9 @@ public class Engine extends AirplaneComponentDriver {
             int power = i * 200;
             System.out.println(e.getPower() + " " + power + " " + e.power(power));
         }
+    }
+    public boolean isOn(){
+        return isOn;
     }
     public int power(int horses) {
 
@@ -27,27 +30,40 @@ public class Engine extends AirplaneComponentDriver {
     private int setPower(int power){
         // LIMITA VALOR E RETORNA VARIAÇÃO COM VALOR ANTIGO
 
-        if(!isOn)
+        if(!isOn())
             return 0;
 
-        power = power > 5000 ? 5000 : power < -2000 ? -2000 : power;
+        power = power > 1500 ? 1500 : power < -1000 ? -1000 : power;
 
         int powered = power - this.power;
+
+        // cada 1000pwr leva 10s
+        sleep(Math.abs(powered*10));
+
         this.power = power;
 
         return powered;
 
     }
 
-    public void off(){
+    public boolean off(){
+
+        if(!isOn())
+            return true;
 
         setPower(0);
         isOn = false;
 
+        return true;
     }
-    public void on(){
+    public boolean on(){
+        if(isOn())
+            return true;
+
         setPower(0);
         isOn = true;
+
+        return true;
     }
 
     protected int getLaxity(){

@@ -55,6 +55,10 @@ public class Flap extends AirplaneComponentDriver {
         angle = angle > 90 ? 90 : angle < -90 ? -90 : angle;
 
         int rotated = angle - this.angle;
+
+        // cada angulo rotacionado leva meio segundo
+        sleep(Math.abs(rotated*500));
+
         this.angle = angle;
 
 

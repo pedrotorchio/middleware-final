@@ -44,7 +44,7 @@ public class RequestHandler {
 
         request = new Marshaller()
                             .unmarshall(in);
-        request.addHeader("pilot", sock.getRemoteSocketAddress().toString());
+//        request.addHeader("client", sock.getRemoteSocketAddress().toString());
 
         System.out.print("Receiving ");
         System.out.println(request.toString() + "\n");

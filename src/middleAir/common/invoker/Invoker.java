@@ -67,22 +67,7 @@ public abstract class Invoker {
 
         return rh;
     }
-    protected abstract Request receiveRequest(RequestHandler rh);
-
-    protected void sendRequest(RequestHandler rh, Request req) {
-
-        try {
-            if(!rh.isClosed())
-                rh.setRequest(req)
-                    .send();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        rh.close();
-
-    }
+    protected abstract void receiveRequest(RequestHandler rh);
 
     public abstract static class Callback {
         public void execute(String result, InstanceService service, Invocation invoc) {

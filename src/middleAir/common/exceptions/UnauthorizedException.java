@@ -18,6 +18,9 @@ public class UnauthorizedException extends MiddleAirException {
     public static String getCode(){
         return "401";
     }
+    protected String _getCode(){
+        return getCode();
+    }
     public Request interceptRequest(Request req){
         req = super.interceptRequest(req);
         req.addHeader("authorization", "DENIED");
