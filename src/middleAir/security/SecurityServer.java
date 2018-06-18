@@ -23,7 +23,7 @@ public class SecurityServer implements Runnable{
         rsaService.setHost(HOST);
 
         new NamingProxy("localhost")
-                .bind(rsaService)
+//                .bind(rsaService)
                 .bind(authService);
 
         new InvokerExecution()

@@ -20,7 +20,7 @@ public class Requestor<T> {
     public Invocation invoke(Invocation invoc)
             throws IOException, NotFoundException, TimeoutException, HumanInputException, UnauthorizedException, InternalErrorException {
 
-        Logger.getSingleton().println(
+        Logger.getSingleton().maybePrintln(
                 "Invoking", invoc.getMethodName() + "@" + invoc.getUid()).log();
 
         Request req = mkRequest(invoc);

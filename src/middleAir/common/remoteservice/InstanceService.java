@@ -16,7 +16,8 @@ public abstract class InstanceService extends Service {
 
             result = call(req, methodname, parameters);
 
-            if(!req.getHeader("timeout").equals("FAILED"))
+            String timeout = req.getHeader("timeout");
+            if(!(timeout == null || timeout.equals("FAILED")))
                 req.addHeader("timeout", "OK");
 
         } catch (MiddleAirException e) {

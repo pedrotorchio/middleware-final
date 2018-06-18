@@ -2,6 +2,7 @@ package middleAir;
 
 import controllers.cockpit.components.IAuthenticationMethod;
 import controllers.cockpit.components.IOutputChannel;
+import controllers.cockpit.proxies.MonitorProxy;
 import middleAir.common.clientproxy.ClientProxy;
 import middleAir.common.exceptions.HumanInputException;
 import middleAir.common.exceptions.InvalidMethodException;
@@ -16,8 +17,7 @@ public class MiddleAir extends NamingProxy{
     NamingProxy np;
 
     Credentials authentication;
-    IOutputChannel monitor;
-
+    IOutputChannel monitor = new MonitorProxy();;
 
     public MiddleAir() {
 
@@ -25,6 +25,7 @@ public class MiddleAir extends NamingProxy{
         Logger.getSingleton()
                 .shouldPrint(false)
                 .save2File("middleair-logs");
+
     }
 
     public boolean checkComponents() {
@@ -44,21 +45,27 @@ public class MiddleAir extends NamingProxy{
         monitor = output;
     }
 
-    public void waitAuthentication(IAuthenticationMethod method) throws NotFoundException {
+    public boolean authenticate(IAuthenticationMethod method) throws NotFoundException {
         Credentials user = null;
+
         while(user == null) {
             try {
                 user = method.readAuthentication();
-            } catch (HumanInputException e) {}
+            } catch (HumanInputException e) {
+                return false;
+            }
         }
 
         AuthProxy auth = new AuthProxy(lookup("auth-service"));
                   auth.setOutput(monitor);
 
-        while(!user.isAuthenticated())
-            user = auth.authenticate(user);
+        user = auth.authenticate(user);
+
+        if(!user.isAuthenticated())
+            return false;
 
         setCredentials(user);
+        return true;
     }
     public ClientProxy lookup(String uid) throws NotFoundException {
 

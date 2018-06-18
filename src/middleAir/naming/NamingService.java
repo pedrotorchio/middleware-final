@@ -20,7 +20,7 @@ class NamingService extends InstanceService implements INaming {
     public RemoteService lookup(String uid) throws NotFoundException {
         RemoteService service = (RemoteService)repository.lookup(uid);
         if(service == null)
-            throw new NotFoundException("Serviço não encontrado: " + uid + ".");
+            throw new NotFoundException("Serviço " + uid);
 
         return service;
     }

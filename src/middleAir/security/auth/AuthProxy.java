@@ -18,6 +18,7 @@ public class AuthProxy extends ClientProxy implements IAuth {
 
     public Credentials authenticate(Credentials person){
         String result = null;
+
         addHeader("timeout", Time.secondsLater(20).toString());
 
         try {

@@ -3,7 +3,7 @@ package middleAir.common.exceptions;
 public class NotFoundException extends MiddleAirException {
 
     public NotFoundException(String what) {
-        super(what + " não encontrado");
+        super(what);
     }
     public NotFoundException(){ super(); }
 

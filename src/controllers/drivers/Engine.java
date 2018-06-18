@@ -37,7 +37,7 @@ public class Engine extends AirplaneComponentDriver  {
         if(!isOn())
             return 0;
 
-        sleep(1000);
+        sleep(250);
 
         power = power > 5000 ? 5000 : power < -2000 ? -2000 : power;
 

@@ -121,18 +121,16 @@ public class Cockpit {
 
         try {
 
-            monitor      = new MonitorProxy(mAir.lookup("output-monitor"));
-            mAir.setOutputChannel(monitor);
-
             authKeyboard = new AuthenticationKeyboardProxy(mAir.lookup("auth-keyboard"));
-            mAir.waitAuthentication(authKeyboard);
+            if(!mAir.authenticate(authKeyboard))
+                return false;
 
             yoke         = new YokeProxy(mAir.lookup("air-yoke"));
             throttle     = new ThrottleProxy(mAir.lookup("air-throttle"));
 
 
         } catch (NotFoundException e) {
-
+            monitor.writeError("Problemas encontrados.");
             return false;
         }
 

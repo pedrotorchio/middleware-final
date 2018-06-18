@@ -11,7 +11,7 @@ public class Logger{
     BufferedWriter writer;
     String folder = "";
     String lastMsg = "";
-    boolean doPrint = true;
+    boolean doPrint = false;
     static Logger singleton;
 
 

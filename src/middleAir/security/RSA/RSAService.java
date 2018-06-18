@@ -38,7 +38,7 @@ public class RSAService extends InstanceService implements IRSAService{
 
     public String getPublicKey(String uid) throws NotFoundException {
         if(!register.containsKey(uid))
-            throw new NotFoundException(uid + " não encontrada.");
+            throw new NotFoundException(uid);
 
         return register.get(uid);
     }

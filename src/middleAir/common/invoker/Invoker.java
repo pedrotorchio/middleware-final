@@ -51,7 +51,7 @@ public abstract class Invoker {
                     sock,
                     new Request());
 
-            Logger.getSingleton().println("New Connection", sock.toString()).log();
+            Logger.getSingleton().maybePrintln("New Connection", sock.toString()).log();
 
         } catch (IOException e) {
             if (sock != null) {
