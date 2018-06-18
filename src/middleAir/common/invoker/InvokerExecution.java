@@ -2,6 +2,7 @@ package middleAir.common.invoker;
 
 import middleAir.common.exceptions.NotFoundException;
 import middleAir.common.exceptions.UnauthorizedException;
+import middleAir.common.logger.Logger;
 import middleAir.common.remoteservice.InstanceService;
 import middleAir.common.requesthandler.Request;
 import middleAir.common.requesthandler.RequestHandler;
@@ -68,7 +69,7 @@ public class InvokerExecution extends Invoker{
 
             invoc = new Requestor().mkInvocation(req);
 
-            System.out.println("Object lookup");
+            Logger.getSingleton().maybePrintln("Object Lookup");
             service = repository.lookup(invoc.getUid());
 
             if (service == null)

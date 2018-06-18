@@ -2,6 +2,7 @@ package controllers.cockpit.components;
 
 import controllers.simulators.Airplane;
 import middleAir.common.exceptions.MiddleAirException;
+import middleAir.common.logger.Logger;
 import middleAir.common.remoteservice.InstanceService;
 import middleAir.common.requesthandler.Request;
 
@@ -15,7 +16,7 @@ public class Yoke extends InstanceService implements IYoke{
 
     public int steer(int degrees){
         // angulo positivo, sentido horário
-        System.out.println("Steering to " + degrees + "deg" + " " + (degrees > 0 ? "CW" : "CCW"));
+        Logger.getSingleton().maybePrintln("Steering to " + degrees + "deg" + " " + (degrees > 0 ? "CW" : "CCW"));
 
         rotateFlap(degrees/2, -degrees/2, (left,right) -> true);
 
@@ -25,7 +26,7 @@ public class Yoke extends InstanceService implements IYoke{
     public int rise(int degrees){
         // angulo positivo, bico para cima
 
-        System.out.println("Rising to " + degrees + "deg"+ " " + (degrees > 0 ? "Up" : "Down"));
+        Logger.getSingleton().maybePrintln("Rising to " + degrees + "deg"+ " " + (degrees > 0 ? "Up" : "Down"));
 
         rotateFlap(degrees/2, degrees/2, (left,right) -> left==right);
 
@@ -43,7 +44,7 @@ public class Yoke extends InstanceService implements IYoke{
             rightRotation = 0;
 
         // enquanto os criterios de erro nao forem atendidos (erro < 10%) ou tentativas ainda não ultrapassarem 12
-        System.out.print("Rotating Flaps (" + leftGoal + ", " + rightGoal+ ") = ");
+        Logger.getSingleton().maybePrint("Rotating Flaps (" + leftGoal + ", " + rightGoal+ ") = ");
         do {
 
 
@@ -52,7 +53,7 @@ public class Yoke extends InstanceService implements IYoke{
 
 
 
-            System.out.print("(" + leftRotation + ", " + rightRotation + ").. ");
+            Logger.getSingleton().maybePrintln("(" + leftRotation + ", " + rightRotation + ").. ");
 
             i++;
 
@@ -65,7 +66,7 @@ public class Yoke extends InstanceService implements IYoke{
                         !wasInterrupted()
         );
 
-        System.out.println("= (" + plane.fl.getAngle() + ", " + plane.fr.getAngle() + ")");
+        Logger.getSingleton().maybePrintln("= (" + plane.fl.getAngle() + ", " + plane.fr.getAngle() + ")");
     }
 
     public String call(Request req, String methodname, String[] parameters) throws MiddleAirException{

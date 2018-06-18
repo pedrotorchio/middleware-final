@@ -2,7 +2,6 @@ package controllers.cockpit.proxies;
 
 import controllers.cockpit.components.IAuthenticationMethod;
 import middleAir.common.clientproxy.ClientProxy;
-import middleAir.common.invoker.Time;
 import middleAir.common.types.Credentials;
 
 public class AuthenticationKeyboardProxy extends ClientProxy implements IAuthenticationMethod {
@@ -11,8 +10,6 @@ public class AuthenticationKeyboardProxy extends ClientProxy implements IAuthent
         super(original);
     }
     public Credentials readAuthentication(){
-        addHeader("timeout", Time.secondsLater(10).toString());
-
         String result;
         Credentials person = null;
 

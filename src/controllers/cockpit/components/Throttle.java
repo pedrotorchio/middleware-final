@@ -70,6 +70,14 @@ public class Throttle extends InstanceService implements IThrottle {
         return switchEngines(false);
     }
 
+    public int getPower() {
+        return plane.ell.getPower() + plane.elr.getPower() + plane.erl.getPower() + plane.err.getPower();
+    }
+
+    public boolean isOn() {
+        return enginesOn;
+    }
+
     public boolean switchEngines(boolean on) throws TimeoutException { //true on, false off
 
         // liga todas as turbinas
@@ -118,6 +126,15 @@ public class Throttle extends InstanceService implements IThrottle {
                 result = ""+off();
                 setReturnMeaning(req, "SE foi possivel desligar TODOS motores");
                 return result;
+            case "isOn":
+                result = isOn() ? "true" : "false";
+                setReturnMeaning(req, "SE motores estão ligados");
+                return result;
+            case "getPower":
+                result = ""+getPower();
+                setReturnMeaning(req,"Soma das potências dos motores");
+                return result;
+
             default:
                 return "DEFAULT";
         }

@@ -1,6 +1,7 @@
 package controllers.cockpit.components;
 
 import middleAir.common.exceptions.MiddleAirException;
+import middleAir.common.logger.Logger;
 import middleAir.common.remoteservice.InstanceService;
 import middleAir.common.requesthandler.Request;
 
@@ -13,8 +14,7 @@ public class Monitor extends InstanceService implements IOutputChannel{
     public void write(String message) {
         message = consoleString(message, "-");
 
-        System.out.println("- DISPLAY:");
-        System.out.println(message);
+        Logger.getSingleton().println("DISPLAY", message);
     }
 
     public void writeError(String message) {

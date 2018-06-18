@@ -1,5 +1,6 @@
 package middleAir.common.requesthandler;
 
+import middleAir.common.logger.Logger;
 import middleAir.common.marshaller.Marshaller;
 
 import java.io.IOException;
@@ -29,8 +30,7 @@ public class RequestHandler {
         return this;
     }
     public RequestHandler send() throws IOException{
-        System.out.print("Sending ");
-        System.out.println(request.toString() + "\n");
+        Logger.getSingleton().println("Sending.. ", request.toString()).log();
 
         out.write(
                 new Marshaller()
@@ -46,8 +46,7 @@ public class RequestHandler {
                             .unmarshall(in);
 //        request.addHeader("client", sock.getRemoteSocketAddress().toString());
 
-        System.out.print("Receiving ");
-        System.out.println(request.toString() + "\n");
+        Logger.getSingleton().println("Receiving .. ", request.toString()).log();
 
         return this;
     }

@@ -12,7 +12,7 @@ public class ThrottleProxy extends ClientProxy implements IThrottle {
     }
 
     public int powerUp(int power) {
-        addHeader("timeout", Time.secondsLater(power/100).toString());
+        addHeader("timeout", Time.secondsLater(power/500).toString());
         try {
             power = Integer.parseInt(call("powerUp", ""+power));
         } catch( TimeoutException e){
@@ -25,7 +25,7 @@ public class ThrottleProxy extends ClientProxy implements IThrottle {
     }
 
     public int powerDown(int power) {
-        addHeader("timeout", Time.secondsLater(power/100).toString());
+        addHeader("timeout", Time.secondsLater(power/500).toString());
         try {
             power = Integer.parseInt(call("powerDown", ""+power));
 
@@ -39,7 +39,7 @@ public class ThrottleProxy extends ClientProxy implements IThrottle {
     }
 
     public boolean on() {
-        addHeader("timeout", Time.secondsLater(5).toString());
+        addHeader("timeout", Time.secondsLater(10).toString());
         String result ;
         try {
             result = call("on");
@@ -55,13 +55,43 @@ public class ThrottleProxy extends ClientProxy implements IThrottle {
     }
 
     public boolean off() {
-        addHeader("timeout", Time.secondsLater(5).toString());
+        addHeader("timeout", Time.secondsLater(10).toString());
         String result;
         try {
             result = call("off");
 
         } catch(TimeoutException e){
-            return e.getMessage().equals("true");
+            result = e.getMessage();
+        } catch (Exception e) {
+            writeError(e.getMessage());
+            return false;
+        }
+        return result.equals("true");
+    }
+
+    public int getPower() {
+        int power = 0;
+        addHeader("timeout", Time.secondsLater(2).toString());
+        try {
+            power = Integer.parseInt(call("getPower"));
+
+        }catch( TimeoutException e){
+            power = Integer.parseInt(e.getMessage());
+        } catch (Exception e) {
+            return 0;
+        }
+
+        return power;
+    }
+
+    public boolean isOn() {
+        addHeader("timeout", Time.secondsLater(2).toString());
+        String result;
+        try {
+            result = call("isOn");
+
+        } catch(TimeoutException e){
+            result = e.getMessage();
         } catch (Exception e) {
             writeError(e.getMessage());
             return false;

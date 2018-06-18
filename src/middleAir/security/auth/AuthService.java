@@ -3,6 +3,7 @@ package middleAir.security.auth;
 import middleAir.common.exceptions.MiddleAirException;
 import middleAir.common.exceptions.NotFoundException;
 import middleAir.common.exceptions.UnauthorizedException;
+import middleAir.common.logger.Logger;
 import middleAir.common.remoteservice.InstanceService;
 import middleAir.common.requesthandler.Request;
 import middleAir.common.types.Credentials;
@@ -47,8 +48,7 @@ public class AuthService extends InstanceService implements IAuth{
             authKey = person.key;
         }
 
-        System.out.println("Authenticating.. ");
-        System.out.println("\t\t" + person.uid + " " + authKey + "\n");
+        Logger.getSingleton().println("Authenticating.. ", person.uid + " " + authKey).log();
 
         person.authKey = authKey;
         authKeys.put(person.uid, authKey);
@@ -63,8 +63,7 @@ public class AuthService extends InstanceService implements IAuth{
     }
 
     public boolean authorize(Credentials person) throws NotFoundException {
-        System.out.println("Authorizing.. ");
-        System.out.println("\t\t" + person.uid + " " + person.key + "\n");
+            Logger.getSingleton().println("Authorizing.. ", person.uid + " " + person.key).log();
 
         if(!register.containsKey(person.uid))
             throw new NotFoundException(person.uid + " não existe.");

@@ -1,5 +1,6 @@
 package middleAir.common.servicerepository;
 
+import middleAir.common.logger.Logger;
 import middleAir.common.remoteservice.Service;
 
 import java.util.Hashtable;
@@ -7,8 +8,8 @@ import java.util.Hashtable;
 public class ServiceRepository<T extends Service> extends Hashtable<String, T> {
 
     public T lookup(String uid) {
-        System.out.println("Lookup " + uid + " in");
-        System.out.println("\t" + toString() + "\n");
+        Logger.getSingleton().maybePrintln("Lookup.. ",
+                uid + " in" + "\n\t" + toString()).log();
         return get(uid);
     }
 

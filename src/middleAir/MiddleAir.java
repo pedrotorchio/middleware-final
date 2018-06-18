@@ -6,6 +6,7 @@ import middleAir.common.clientproxy.ClientProxy;
 import middleAir.common.exceptions.HumanInputException;
 import middleAir.common.exceptions.InvalidMethodException;
 import middleAir.common.exceptions.NotFoundException;
+import middleAir.common.logger.Logger;
 import middleAir.common.remoteservice.Service;
 import middleAir.common.types.Credentials;
 import middleAir.naming.NamingProxy;
@@ -19,7 +20,11 @@ public class MiddleAir extends NamingProxy{
 
 
     public MiddleAir() {
+
         super("localhost");
+        Logger.getSingleton()
+                .shouldPrint(false)
+                .save2File("middleair-logs");
     }
 
     public boolean checkComponents() {
@@ -48,6 +53,7 @@ public class MiddleAir extends NamingProxy{
         }
 
         AuthProxy auth = new AuthProxy(lookup("auth-service"));
+                  auth.setOutput(monitor);
 
         while(!user.isAuthenticated())
             user = auth.authenticate(user);

@@ -1,6 +1,7 @@
 package middleAir.common.requestor;
 
 import middleAir.common.exceptions.*;
+import middleAir.common.logger.Logger;
 import middleAir.common.requesthandler.Request;
 import middleAir.common.requesthandler.RequestHandler;
 
@@ -19,7 +20,8 @@ public class Requestor<T> {
     public Invocation invoke(Invocation invoc)
             throws IOException, NotFoundException, TimeoutException, HumanInputException, UnauthorizedException, InternalErrorException {
 
-        System.out.println("Invoking " + invoc.getMethodName() + "@" + invoc.getUid() + "\n");
+        Logger.getSingleton().println(
+                "Invoking", invoc.getMethodName() + "@" + invoc.getUid()).log();
 
         Request req = mkRequest(invoc);
         Socket sock = mkSocket(invoc);
@@ -99,7 +101,7 @@ public class Requestor<T> {
                              .setObjectId(uid)
                              .setParameters(parameters.toArray(new String[1]));
 
-        System.out.println(invocation.toString() + "\n");
+        Logger.getSingleton().maybePrintln(invocation.toString()).log();
 
         return invocation;
     }

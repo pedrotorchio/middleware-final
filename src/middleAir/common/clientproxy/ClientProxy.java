@@ -80,7 +80,6 @@ public class ClientProxy extends RemoteService implements IHasHeader<ClientProxy
     }
 
     public void write(String message){
-
         if(output != null)
             output.write(message);
     }
@@ -88,8 +87,6 @@ public class ClientProxy extends RemoteService implements IHasHeader<ClientProxy
     public void writeError(String message){
         if(output != null)
             output.writeError(message);
-        else
-            System.out.println("\n\t$ " + message + "\n");
     }
 
     public static String serialize(ClientProxy cp){

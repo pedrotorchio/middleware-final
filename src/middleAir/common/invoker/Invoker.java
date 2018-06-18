@@ -1,5 +1,6 @@
 package middleAir.common.invoker;
 
+import middleAir.common.logger.Logger;
 import middleAir.common.remoteservice.InstanceService;
 import middleAir.common.requesthandler.Request;
 import middleAir.common.requesthandler.RequestHandler;
@@ -30,7 +31,7 @@ public abstract class Invoker {
         }
 
         while (true) {
-            System.out.println("Servidor Pronto\n");
+            Logger.getSingleton().println("Servidor Pronto");
 
             RequestHandler rh = waitConnection(server);
 
@@ -50,8 +51,7 @@ public abstract class Invoker {
                     sock,
                     new Request());
 
-            System.out.println("New Connection");
-            System.out.println(sock.toString() + "\n");
+            Logger.getSingleton().println("New Connection", sock.toString()).log();
 
         } catch (IOException e) {
             if (sock != null) {
@@ -71,7 +71,7 @@ public abstract class Invoker {
 
     public abstract static class Callback {
         public void execute(String result, InstanceService service, Invocation invoc) {
-            System.out.println("Method " + invoc.getMethodName() + " Executed.");
+            Logger.getSingleton().maybePrintln("Method " + invoc.getMethodName() + " Executed.").log();
             run(result, service, invoc);
         }
 

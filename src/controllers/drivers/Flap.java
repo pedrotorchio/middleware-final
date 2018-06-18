@@ -1,5 +1,7 @@
 package controllers.drivers;
 
+import middleAir.common.logger.Logger;
+
 public class Flap extends AirplaneComponentDriver {
 
     protected final int LAXITY = 50; // %
@@ -10,19 +12,19 @@ public class Flap extends AirplaneComponentDriver {
         for(int rotation = 0 ; rotation < 90 ; rotation+=15){
             int actualRotated;
 
-            System.out.print(
+            Logger.getSingleton().maybePrint(
                     f.getAngle()+"deg rotated " + rotation + "deg -> ");
 
 
             actualRotated = f.rotate(rotation);
 
-            System.out.println(f.getAngle() + " ("  + actualRotated + "deg)");
+            Logger.getSingleton().maybePrintln(f.getAngle() + " ("  + actualRotated + "deg)");
 
         }
         for(int rotation = 0 ; rotation > -90 ; rotation-=10){
             int actualRotated;
 
-            System.out.print(
+            Logger.getSingleton().maybePrint(
                     f.getAngle()+"deg rotated " + rotation + "deg -> ");
 
 
@@ -30,7 +32,7 @@ public class Flap extends AirplaneComponentDriver {
 
 
 
-            System.out.println(f.getAngle() + " ("  + actualRotated + "deg)");
+            Logger.getSingleton().maybePrintln(f.getAngle() + " ("  + actualRotated + "deg)");
 
         }
     }
@@ -54,13 +56,15 @@ public class Flap extends AirplaneComponentDriver {
         // LIMITA VALOR E RETORNA VARIAÇÃO COM VALOR ANTIGO
         angle = angle > 90 ? 90 : angle < -90 ? -90 : angle;
 
+        sleep(500);
+
         int rotated = angle - this.angle;
 
-        // cada angulo rotacionado leva meio segundo
-        sleep(Math.abs(rotated*500));
+        // 10deg/s
+        int time = Math.abs(rotated*100);
+        sleep(time);
 
         this.angle = angle;
-
 
         return rotated;
 

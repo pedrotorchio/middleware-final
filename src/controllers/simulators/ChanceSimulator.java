@@ -1,6 +1,7 @@
 package controllers.simulators;
 
 import controllers.exceptions.ComponentException;
+import middleAir.common.logger.Logger;
 
 public class ChanceSimulator {
 public static void main(String[] args){
@@ -11,7 +12,7 @@ public static void main(String[] args){
             double sort = chance.range(centroid, var);
 
             double desv = (1 - sort/centroid)*100;
-            System.out.println(centroid + ", " + var + " = " + sort + " (" + desv + "%)");
+            Logger.getSingleton().maybePrintln(centroid + ", " + var + " = " + sort + " (" + desv + "%)");
         }
 
 }
