@@ -25,9 +25,13 @@ public class TimeoutInterceptor implements IInterceptor<Request, TimeoutExceptio
         return toTime;
     }
     public boolean hasPassed(Time toTime){
-        Time now    = Time.now();
+        try {
+            Time now = Time.now();
 
-        return now.passed(toTime);
+            return now.passed(toTime);
+        }catch(Exception e){
+            return false;
+        }
     }
 }
 

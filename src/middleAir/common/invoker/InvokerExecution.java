@@ -125,7 +125,7 @@ public class InvokerExecution extends Invoker{
             public void run(){
                 Time toTime = ti.getTime(req);
 
-                while(!ti.hasPassed(toTime) && !isInterrupted()){
+                while(!isInterrupted() && !ti.hasPassed(toTime)){
                     try {
                         Thread.sleep(INTERVAL);
 
