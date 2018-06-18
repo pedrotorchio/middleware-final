@@ -10,26 +10,36 @@ public class App {
     static Scanner in = new Scanner(System.in);
     public static void main(String[] args) throws InterruptedException {
 
-        System.out.println("<enter> para iniciar teclado de autenticação");
-        in.nextLine();
-        System.out.println("Verifique o teclado");
-
         pit = new Cockpit();
         start();
 
     }
     private static int[] getCommand(){
 
-        String[] command = in.nextLine().split(" ");
+        String line = in.nextLine();
+
+        int [] comm = {'\n', -1};
+
+        if(line.length() == 0)
+            return comm;
+
+        String[] command = line.split(" ");
+
         int commC = command[0].charAt(0);
         int value = command.length > 1 ? Integer.parseInt(command[1]) : -1;
 
-        int[] comm = {commC, value};
+        comm[0] = commC;
+        comm[1] = value;
 
         return comm;
     }
     private static void start(){
-        while(!pit.setup());
+        do{
+            Logger.getSingleton().println("<enter> para iniciar teclado de autenticação");
+            in.nextLine();
+            Logger.getSingleton().println("Verifique o teclado...");
+
+        }while(!pit.setup());
 
         do{
 
@@ -47,8 +57,16 @@ public class App {
                         v = 1000;
                     break;
                 case 'a':
+                    if(v == -1)
+                        v = 10;
+                    break;
                 case 's':
-                case 'f':
+                    if(v == -1)
+                        v = 10;
+                    break;
+                case 'd':
+                    if(v == -1)
+                        v = 10;
                 case 'w':
                     if(v == -1)
                         v = 10;
@@ -78,19 +96,21 @@ public class App {
                 case 'd':
                     pit.steer(v);
                     break;
+                case 'p':
+                    pit.getPower();
             }
 
         }while(true);
     }
     private static int[] commandMenu(){
         Logger.getSingleton().println("Comandos ( em minúsculo )",
-               " N - Ligar\n" +
+                " N - Ligar\n" +
                         " M - Desligar\n\n" +
+                        " P  - Visualizar Potência\n" +
                         " Q  <num (500pwr)>  - Reduzir Potência\n" +
                         " E  <num (1000pwr)> - Aumentar Potência\n" +
                         " W  <num (10deg)>   - Navegação\n" +
-                        "ASD\n"
-
+                        "ASD"
         );
         return getCommand();
     }
