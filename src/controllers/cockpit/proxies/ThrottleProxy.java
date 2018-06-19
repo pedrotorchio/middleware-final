@@ -12,7 +12,7 @@ public class ThrottleProxy extends ClientProxy implements IThrottle {
     }
 
     public int powerUp(int power) {
-        addHeader("timeout", Time.secondsLater(power/300).toString());
+        addHeader("timeout", Time.secondsLater(0).toString());
         try {
             power = Integer.parseInt(call("powerUp", ""+power));
         } catch( TimeoutException e){

@@ -136,8 +136,9 @@ public class App {
                         " Q  <num (500pwr)>  - Reduzir Potência\n" +
                         " E  <num (1000pwr)> - Aumentar Potência\n" +
                         " W  <num (10deg)>   - Navegação\n" +
-                        " T  <comando> <repetições> - Avaliação\n " +
-                        "ASD"
+                        "ASD\n" +
+                        " T  <comando> <repetições> - Avaliação"
+
         );
         return getCommand();
     }

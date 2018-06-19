@@ -10,13 +10,13 @@ Body: [auth-keyboard]/lookup@naming-service
 
 --------[ Receiving .. 
 Request:
-Header: {done=1529359896951, method=lookup@naming-service}
+Header: {done=1529373035587, method=lookup@naming-service}
 Body: localhost:4325:auth-keyboard
 ---
 
 --------[ Receiving .. 
 Request:
-Header: {done=1529359896951, method=lookup@naming-service}
+Header: {done=1529373035587, method=lookup@naming-service}
 Body: localhost:4325:auth-keyboard
 ---
 
@@ -28,13 +28,13 @@ Body: []/readAuthentication@auth-keyboard
 
 --------[ Receiving .. 
 Request:
-Header: {done=1529359921089, method=readAuthentication@auth-keyboard}
+Header: {done=1529373044970, method=readAuthentication@auth-keyboard}
 Body: pedro:161091:null
 ---
 
 --------[ Receiving .. 
 Request:
-Header: {done=1529359921089, method=readAuthentication@auth-keyboard}
+Header: {done=1529373044970, method=readAuthentication@auth-keyboard}
 Body: pedro:161091:null
 ---
 
@@ -46,32 +46,32 @@ Body: [auth-service]/lookup@naming-service
 
 --------[ Receiving .. 
 Request:
-Header: {done=1529359921091, method=lookup@naming-service}
+Header: {done=1529373044979, method=lookup@naming-service}
 Body: localhost:5325:auth-service
 ---
 
 --------[ Receiving .. 
 Request:
-Header: {done=1529359921091, method=lookup@naming-service}
+Header: {done=1529373044979, method=lookup@naming-service}
 Body: localhost:5325:auth-service
 ---
 
 --------[ Sending.. 
 Request:
-Header: {timeout=1529359941092}
+Header: {timeout=1529373064980}
 Body: [pedro,161091]/authenticate@auth-service
 ---
 
 --------[ Receiving .. 
 Request:
-Header: {body=Authkey para usuario, done=1529359921094, timeout=OK, method=authenticate@auth-service}
-Body: +8JM2Q<9IV/./@==
+Header: {body=Authkey para usuario, done=1529373045039, timeout=OK, method=authenticate@auth-service}
+Body: +WS106?MT6VF6Q==
 ---
 
 --------[ Receiving .. 
 Request:
-Header: {body=Authkey para usuario, done=1529359921094, timeout=OK, method=authenticate@auth-service}
-Body: +8JM2Q<9IV/./@==
+Header: {body=Authkey para usuario, done=1529373045039, timeout=OK, method=authenticate@auth-service}
+Body: +WS106?MT6VF6Q==
 ---
 
 --------[ Sending.. 
@@ -82,13 +82,13 @@ Body: [air-yoke]/lookup@naming-service
 
 --------[ Receiving .. 
 Request:
-Header: {done=1529359921097, method=lookup@naming-service}
+Header: {done=1529373045047, method=lookup@naming-service}
 Body: localhost:4325:air-yoke
 ---
 
 --------[ Receiving .. 
 Request:
-Header: {done=1529359921097, method=lookup@naming-service}
+Header: {done=1529373045047, method=lookup@naming-service}
 Body: localhost:4325:air-yoke
 ---
 
@@ -100,6 +100,6 @@ Body: [air-throttle]/lookup@naming-service
 
 --------[ Receiving .. 
 Request:
-Header: {done=1529359921100, method=lookup@naming-service}
+Header: {done=1529373045050, method=lookup@naming-service}
 Body: localhost:4325:air-throttle
 ---
