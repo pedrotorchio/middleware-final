@@ -6,6 +6,9 @@ import controllers.cockpit.proxies.ThrottleProxy;
 import controllers.cockpit.proxies.YokeProxy;
 import middleAir.MiddleAir;
 import middleAir.common.exceptions.NotFoundException;
+import middleAir.common.logger.Logger;
+
+import java.util.Date;
 
 public class Cockpit {
     MiddleAir mAir = null;
@@ -96,6 +99,51 @@ public class Cockpit {
 
         return power;
     }
+
+    public void repeat(long starTimestamp, int repeat, int value) throws InterruptedException {
+        for (int i = 0 ; i < repeat; i++) {
+            runCommandForValue(value);
+            Thread.sleep(2);
+        }
+
+        long endTimestamp = new Date().getTime();
+        long diff = endTimestamp - starTimestamp;
+
+        Logger.getSingleton().println("Durou " + diff + " milisegundos");
+    }
+
+    private void runCommandForValue(int c) {
+        switch(c){
+            case 'n':
+                on();
+                break;
+            case 'm':
+                off();
+                break;
+            case 'q':
+                powerDown(10);
+                break;
+            case 'e':
+                powerUp(10);
+                break;
+            case 'w':
+                rise(-10);
+                break;
+            case 's':
+                rise(10);
+                break;
+            case 'a':
+                steer(-10);
+                break;
+            case 'd':
+                steer(10);
+                break;
+            case 'p':
+                getPower();
+                break;
+        }
+    }
+
     public boolean isOn(){
         if(mAir == null) return false;
         boolean ison = throttle.isOn();

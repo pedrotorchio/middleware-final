@@ -44,7 +44,7 @@ public class App {
 
         return comm;
     }
-    private static void start(){
+    private static void start() throws InterruptedException {
         do{
             Logger.getSingleton().println("<enter> para iniciar teclado de autenticação");
             in.nextLine();
@@ -106,17 +106,7 @@ public class App {
                     break;
                 case 't':
                     long startTimestamp = new Date().getTime();
-
-                    for (int i = 0 ; i < repeat; i++) {
-                        runCommandForValue(v);
-                    }
-
-                    long endTimestamp = new Date().getTime();
-                    long diff = endTimestamp - startTimestamp;
-                    long diffSeconds = diff / 1000 % 60;
-
-                    Logger.getSingleton().println("Durou " + diffSeconds + " segundos");
-
+                    pit.repeat(startTimestamp, repeat, v);
             }
 
         }while(true);
@@ -136,35 +126,4 @@ public class App {
         return getCommand();
     }
 
-    private static void runCommandForValue(int c) {
-        switch(c){
-            case 'n':
-                pit.on();
-                break;
-            case 'm':
-                pit.off();
-                break;
-            case 'q':
-                pit.powerDown(10);
-                break;
-            case 'e':
-                pit.powerUp(10);
-                break;
-            case 'w':
-                pit.rise(-10);
-                break;
-            case 's':
-                pit.rise(10);
-                break;
-            case 'a':
-                pit.steer(-10);
-                break;
-            case 'd':
-                pit.steer(10);
-                break;
-            case 'p':
-                pit.getPower();
-                break;
-        }
-    }
 }
