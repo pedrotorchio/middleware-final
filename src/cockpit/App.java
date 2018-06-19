@@ -69,19 +69,12 @@ public class App {
                         v = 1000;
                     break;
                 case 'a':
-                    if(v == -1)
-                        v = 10;
-                    break;
-                case 's':
-                    if(v == -1)
-                        v = 10;
-                    break;
                 case 'd':
-                    if(v == -1)
-                        v = 10;
+                case 's':
                 case 'w':
                     if(v == -1)
                         v = 10;
+                    break;
             }
             switch(c){
                 case 'n':
